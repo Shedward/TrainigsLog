@@ -33,18 +33,21 @@ struct ModelPicker<T: PersistentModel, RowContent: View, CreateScreen: View>: Vi
     @State private var openPicker: Bool = false
 
     var body: some View {
-        Cell {
-            HStack(alignment: .firstTextBaseline) {
-                Text(name)
-                Spacer()
-                if let selection {
-                    Text(selection[keyPath: field])
-                        .foregroundStyle(.secondary)
+        LabeledContent(name) {
+            Cell {
+                HStack(alignment: .firstTextBaseline) {
+                    if let selection {
+                        Text(selection[keyPath: field])
+                    } else {
+                        Text("Select...")
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.down")
                 }
-                Image(systemName: "chevron.down")
+            } onTap: {
+                openPicker = true
             }
-        } onTap: {
-            openPicker = true
         }
         .sheet(isPresented: $openPicker) {
             ModelPickerSelector(
@@ -127,7 +130,7 @@ struct ModelPickerSelector<T: PersistentModel, RowContent: View, CreateScreen: V
             .navigationTitle(name)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("Cancel", role: .cancel) {
                         dismiss()
                     }
                 }

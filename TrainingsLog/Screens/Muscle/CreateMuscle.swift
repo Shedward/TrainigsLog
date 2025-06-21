@@ -24,7 +24,7 @@ struct CreateMuscle: View {
             }
             .toolbar {
                 Spacer()
-                Button("Cancel") {
+                Button("Cancel", role: .cancel) {
                     dismiss()
                 }
                 Button("Add") {

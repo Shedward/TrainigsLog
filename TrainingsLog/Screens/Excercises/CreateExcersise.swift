@@ -20,22 +20,14 @@ struct CreateExercise: View {
         NavigationStack {
             UniversalForm {
                 TextField("Name", text: $name)
-                ModelPicker(
-                    name: "Muscle",
-                    field: \Muscle.name,
-                    selection: $muscle
-                ) { muscle in
-                    MuscleCell(muscle: muscle)
-                } createScreen: {
-                    CreateMuscle()
-                }
+                MusclePicker(selection: $muscle)
             }
             .toolbar {
                 Spacer()
-                Button("Cancel") {
+                Button("Cancel", role: .cancel) {
                     dismiss()
                 }
-                Button("Add") {
+                Button("Save") {
                     guard let muscle else {
                         return
                     }
