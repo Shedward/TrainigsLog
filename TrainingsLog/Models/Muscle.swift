@@ -1,5 +1,5 @@
 //
-//  MuscleGroup.swift
+//  Muscle.swift
 //  TrainingsLog
 //
 //  Created by Vlad Maltsev on 17.06.2025.
@@ -8,7 +8,7 @@
 import SwiftData
 
 @Model
-class MuscleGroup {
+class Muscle {
     @Attribute(.unique) var name: String
 
     var category: String?

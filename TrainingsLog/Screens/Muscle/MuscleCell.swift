@@ -1,5 +1,5 @@
 //
-//  MuscleGroupCell.swift
+//  MuscleCell.swift
 //  TrainingsLog
 //
 //  Created by Vlad Maltsev on 18.06.2025.
@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct MuscleGroupCell: View {
-    let muscleGroup: MuscleGroup
+struct MuscleCell: View {
+    let muscle: Muscle
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(muscleGroup.name)
+            Text(muscle.name)
                 .font(.body.bold())
 
-            if let category = muscleGroup.category {
+            if let category = muscle.category {
                 Text(category)
             }
         }
@@ -26,5 +26,5 @@ struct MuscleGroupCell: View {
 }
 
 #Preview {
-    MuscleGroupCell(muscleGroup: MuscleGroup(name: "Something"))
+    MuscleCell(muscle: Muscle(name: "Something"))
 }

@@ -11,7 +11,7 @@ import SwiftData
 struct CreateExercise: View {
 
     @State var name: String = ""
-    @State var muscleGroup: MuscleGroup?
+    @State var muscle: Muscle?
 
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
@@ -21,11 +21,13 @@ struct CreateExercise: View {
             UniversalForm {
                 TextField("Name", text: $name)
                 ModelPicker(
-                    name: "Muscle Group",
-                    field: \MuscleGroup.name,
-                    selection: $muscleGroup
-                ) { muscleGroup in
-                    MuscleGroupCell(muscleGroup: muscleGroup)
+                    name: "Muscle",
+                    field: \Muscle.name,
+                    selection: $muscle
+                ) { muscle in
+                    MuscleCell(muscle: muscle)
+                } createScreen: {
+                    CreateMuscle()
                 }
             }
             .toolbar {
@@ -34,10 +36,10 @@ struct CreateExercise: View {
                     dismiss()
                 }
                 Button("Add") {
-                    guard let muscleGroup else {
+                    guard let muscle else {
                         return
                     }
-                    let exercise = Exercise(name: name, muscleGroup: muscleGroup)
+                    let exercise = Exercise(name: name, muscle: muscle)
                     modelContext.insert(exercise)
                     dismiss()
                 }

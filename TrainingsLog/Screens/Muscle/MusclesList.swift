@@ -8,22 +8,22 @@
 import SwiftUI
 import SwiftData
 
-struct MuscleGroupList: View {
+struct MusclesList: View {
 
-    @Query(sort: \MuscleGroup.name, animation: .default)
-    var muscleGroups: [MuscleGroup] = []
+    @Query(sort: \Muscle.name, animation: .default)
+    var muscles: [Muscle] = []
 
-    @State var openCreateMuscleGroupSheet: Bool = false
+    @State var openCreateMuscleSheet: Bool = false
     @Environment(\.modelContext) var modelContext
 
     var body: some View {
         NavigationStack {
-            List(muscleGroups) { muscleGroup in
-                MuscleGroupCell(muscleGroup: muscleGroup)
+            List(muscles) { muscle in
+                MuscleCell(muscle: muscle)
                     .swipeActions {
                         Button(role: .destructive) {
                             withAnimation {
-                                modelContext.delete(muscleGroup)
+                                modelContext.delete(muscle)
                             }
                         } label: {
                             Label("Delete", systemImage: "trash")
@@ -33,15 +33,15 @@ struct MuscleGroupList: View {
             }.toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button(systemIcon: "plus") {
-                        openCreateMuscleGroupSheet = true
+                        openCreateMuscleSheet = true
                     }
                     .keyboardShortcut("N", modifiers: .command)
                 }
             }
-            .animation(.default, value: muscleGroups)
+            .animation(.default, value: muscles)
         }
-        .sheet(isPresented: $openCreateMuscleGroupSheet) {
-            CreateMuscleGroup()
+        .sheet(isPresented: $openCreateMuscleSheet) {
+            CreateMuscle()
                 .presentationDetents([.medium])
         }
     }

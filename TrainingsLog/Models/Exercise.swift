@@ -11,11 +11,11 @@ import SwiftData
 class Exercise {
     @Attribute(.unique) var name: String
 
-    var muscleGroup: MuscleGroup
+    var muscle: Muscle
 
-    init(name: String, muscleGroup: MuscleGroup) {
+    init(name: String, muscle: Muscle) {
         self.name = name
-        self.muscleGroup = muscleGroup
+        self.muscle = muscle
     }
 }
 

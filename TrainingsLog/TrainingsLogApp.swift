@@ -12,7 +12,7 @@ import SwiftData
 struct TrainingsLogApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            MuscleGroup.self,
+            Muscle.self,
             Exercise.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -27,14 +27,14 @@ struct TrainingsLogApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                Tab("Trainings Log", systemImage: "checklist.unchecked") {
+                Tab("Trainings", systemImage: "checklist.unchecked") {
                     TrainingsList()
                 }
-                Tab("ExercisesList", systemImage: "figure.strengthtraining.traditional") {
+                Tab("Exercises", systemImage: "figure.strengthtraining.traditional") {
                     ExercisesList()
                 }
-                Tab("Muscle Groups", systemImage: "figure") {
-                    MuscleGroupList()
+                Tab("Muscles", systemImage: "figure") {
+                    MusclesList()
                 }
             }
         }

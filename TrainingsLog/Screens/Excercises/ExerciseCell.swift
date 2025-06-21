@@ -15,7 +15,7 @@ struct ExerciseCell: View {
             Text(exercise.name)
                 .font(.body.bold())
 
-            Text(exercise.muscleGroup.name)
+            Text(exercise.muscle.name)
         }
         .frame(minHeight: 32)
         .padding(.horizontal, 16)
