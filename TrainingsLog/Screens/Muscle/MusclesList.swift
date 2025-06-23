@@ -21,18 +21,15 @@ struct MusclesList: View {
             List(muscles) { muscle in
                 MuscleCell(muscle: muscle)
                     .swipeActions {
-                        Button(role: .destructive) {
+                        Button.delete {
                             withAnimation {
                                 modelContext.delete(muscle)
                             }
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-
                         }
                     }
             }.toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button(systemIcon: "plus") {
+                    Button.add {
                         openCreateMuscleSheet = true
                     }
                     .keyboardShortcut("N", modifiers: .command)

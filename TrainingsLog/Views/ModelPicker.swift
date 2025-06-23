@@ -130,14 +130,14 @@ struct ModelPickerSelector<T: PersistentModel, RowContent: View, CreateScreen: V
             .navigationTitle(name)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", role: .cancel) {
+                    Button.cancel {
                         dismiss()
                     }
                 }
 
                 if CreateScreen.self != EmptyView.self {
                     ToolbarItem {
-                        Button("Create") {
+                        Button.add {
                             openCreateScreen = true
                         }
                     }

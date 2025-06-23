@@ -21,17 +21,15 @@ struct ExercisesList: View {
             List(exercises) { exercise in
                 ExerciseCell(exercise: exercise)
                     .swipeActions {
-                        Button(role: .destructive) {
+                        Button.delete {
                             withAnimation {
                                 modelContext.delete(exercise)
                             }
-                        } label: {
-                            Label("Delete", systemImage: "trash")
                         }
                     }
             }.toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button(systemIcon: "plus") {
+                    Button.add {
                         openCreateExerciseSheet = true
                     }
                     .keyboardShortcut("N", modifiers: .command)

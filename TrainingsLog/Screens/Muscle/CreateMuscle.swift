@@ -24,10 +24,10 @@ struct CreateMuscle: View {
             }
             .toolbar {
                 Spacer()
-                Button("Cancel", role: .cancel) {
+                Button.cancel {
                     dismiss()
                 }
-                Button("Add") {
+                Button.save {
                     let muscle = Muscle(name: name, category: category?.nonWhitespace)
                     modelContext.insert(muscle)
                     dismiss()

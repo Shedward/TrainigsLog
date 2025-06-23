@@ -24,10 +24,10 @@ struct CreateExercise: View {
             }
             .toolbar {
                 Spacer()
-                Button("Cancel", role: .cancel) {
+                Button.cancel {
                     dismiss()
                 }
-                Button("Save") {
+                Button.save {
                     guard let muscle else {
                         return
                     }
