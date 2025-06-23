@@ -22,3 +22,26 @@ struct MusclePicker: View {
         }
     }
 }
+
+struct MuscleSelector: View {
+    @State private var selection: Muscle?
+    let onSelect: (Muscle) -> Void
+
+    init(onSelect: @escaping (Muscle) -> Void) {
+        self.onSelect = onSelect
+    }
+
+    var body: some View {
+        ModelSelector(
+            name: "Muscle",
+            field: \Muscle.name,
+            selection: $selection
+        ) { muscle in
+            MuscleCell(muscle: muscle)
+        } createScreen: {
+            CreateMuscle()
+        } onSelect: { muscle in
+            onSelect(muscle)
+        }
+    }
+}

@@ -10,12 +10,11 @@ import SwiftData
 @Model
 class Exercise {
     @Attribute(.unique) var name: String
+    @Relationship(inverse: \MuscleLoad.exercise) var muscleLoads: [MuscleLoad]
 
-    var muscle: Muscle
-
-    init(name: String, muscle: Muscle) {
+    init(name: String, muscleLoads: [MuscleLoad] = []) {
         self.name = name
-        self.muscle = muscle
+        self.muscleLoads = muscleLoads
     }
 }
 

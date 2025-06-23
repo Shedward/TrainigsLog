@@ -10,8 +10,15 @@ import SwiftData
 
 struct CreateExercise: View {
 
-    @State var name: String = ""
-    @State var muscle: Muscle?
+    private struct CreateMuscleLoad: Identifiable {
+        let id: UUID = UUID()
+        var muscle: Muscle
+        var loadFraction: Double
+    }
+
+    @State private var name: String = ""
+    @State private var muscleLoads: [CreateMuscleLoad] = []
+    @State private var openAddMuscleLoad: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
@@ -20,7 +27,16 @@ struct CreateExercise: View {
         NavigationStack {
             UniversalForm {
                 TextField("Name", text: $name)
-                MusclePicker(selection: $muscle)
+
+                Section("Muscles") {
+                    ForEach(muscleLoads) { muscleLoad in
+                        // TODO: Replace
+                        MuscleCell(muscle: muscleLoad.muscle)
+                    }
+                    Button.add {
+                        openAddMuscleLoad = true
+                    }
+                }
             }
             .toolbar {
                 Spacer()
@@ -28,16 +44,24 @@ struct CreateExercise: View {
                     dismiss()
                 }
                 Button.save {
-                    guard let muscle else {
-                        return
-                    }
-                    let exercise = Exercise(name: name, muscle: muscle)
+                    let exercise = Exercise(name: name)
+                    let muscleLoads = self.muscleLoads
+                        .map { MuscleLoad(muscle: $0.muscle, exercise: exercise, loadFraction: $0.loadFraction) }
+
                     modelContext.insert(exercise)
+                    muscleLoads.forEach { modelContext.insert($0) }
+
                     dismiss()
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(name.isEmpty)
             }
         }
+        .sheet(isPresented: $openAddMuscleLoad) {
+            MuscleSelector { newMuscle in
+                muscleLoads.append(CreateMuscleLoad(muscle: newMuscle, loadFraction: 1.0))
+            }
+        }
+        .presentationDetents([.medium, .large])
     }
 }

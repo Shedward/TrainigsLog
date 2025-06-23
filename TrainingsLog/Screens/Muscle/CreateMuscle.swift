@@ -36,5 +36,6 @@ struct CreateMuscle: View {
                 .disabled(name.isEmpty)
             }
         }
+        .presentationDetents([.fraction(0.25), .large])
     }
 }

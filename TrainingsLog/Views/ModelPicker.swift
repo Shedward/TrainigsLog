@@ -50,7 +50,7 @@ struct ModelPicker<T: PersistentModel, RowContent: View, CreateScreen: View>: Vi
             }
         }
         .sheet(isPresented: $openPicker) {
-            ModelPickerSelector(
+            ModelSelector(
                 name: name,
                 field: field,
                 selection: $selection,
@@ -77,13 +77,14 @@ extension ModelPicker where CreateScreen == EmptyView {
 }
 
 
-struct ModelPickerSelector<T: PersistentModel, RowContent: View, CreateScreen: View>: View {
+struct ModelSelector<T: PersistentModel, RowContent: View, CreateScreen: View>: View {
 
     let name: LocalizedStringKey
     let field: KeyPath<T, String>
     @Binding var selection: T?
     let rowContent: (T) -> RowContent
     let createScreen: () -> CreateScreen
+    let onSelect: ((T) -> Void)?
 
     @State private var searchText: String = ""
     @State private var openCreateScreen: Bool = false
@@ -105,13 +106,15 @@ struct ModelPickerSelector<T: PersistentModel, RowContent: View, CreateScreen: V
         field: KeyPath<T, String>,
         selection: Binding<T?>,
         rowContent: @escaping (T) -> RowContent,
-        createScreen: @escaping () -> CreateScreen
+        createScreen: @escaping () -> CreateScreen,
+        onSelect: ((T) -> Void)? = nil
     ) {
         self.name = name
         self.field = field
         self._selection = selection
         self.rowContent = rowContent
         self.createScreen = createScreen
+        self.onSelect = onSelect
     }
 
     var body: some View {
@@ -121,6 +124,7 @@ struct ModelPickerSelector<T: PersistentModel, RowContent: View, CreateScreen: V
                     rowContent(row)
                 } onTap: {
                     selection = row
+                    onSelect?(row)
                     dismiss()
                 }
             }
@@ -150,17 +154,19 @@ struct ModelPickerSelector<T: PersistentModel, RowContent: View, CreateScreen: V
     }
 }
 
-extension ModelPickerSelector where CreateScreen == EmptyView {
+extension ModelSelector where CreateScreen == EmptyView {
     init(
         name: LocalizedStringKey,
         field: KeyPath<T, String>,
         selection: Binding<T?>,
         @ViewBuilder rowContent: @escaping (T) -> RowContent,
+        onSelect: ((T) -> Void)? = nil
     ) {
         self.name = name
         self.field = field
         self._selection = selection
         self.rowContent = rowContent
         self.createScreen = { EmptyView() }
+        self.onSelect = onSelect
     }
 }

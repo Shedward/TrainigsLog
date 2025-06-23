@@ -10,15 +10,32 @@ import SwiftUI
 struct ExerciseCell: View {
     let exercise: Exercise
 
+    @State private var musclesDescription: String?
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(exercise.name)
                 .font(.body.bold())
 
-            Text(exercise.muscle.name)
+            if let musclesDescription {
+                Text(musclesDescription)
+            }
         }
         .frame(minHeight: 32)
         .padding(.horizontal, 16)
         .padding(.vertical, 4)
+        .onAppear {
+            updateMusclesDescription()
+        }
+        .onChange(of: exercise) { _, _ in
+            updateMusclesDescription()
+        }
+    }
+
+    private func updateMusclesDescription() {
+        musclesDescription = exercise.muscleLoads
+            .sorted(using: SortDescriptor(\.loadFraction, order: .forward))
+            .map(\.muscle.name)
+            .joined(separator: ", ")
     }
 }

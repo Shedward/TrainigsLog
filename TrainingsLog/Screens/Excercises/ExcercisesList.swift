@@ -23,6 +23,9 @@ struct ExercisesList: View {
                     .swipeActions {
                         Button.delete {
                             withAnimation {
+                                for muscleLoad in exercise.muscleLoads {
+                                    modelContext.delete(muscleLoad)
+                                }
                                 modelContext.delete(exercise)
                             }
                         }
@@ -39,7 +42,6 @@ struct ExercisesList: View {
         }
         .sheet(isPresented: $openCreateExerciseSheet) {
             CreateExercise()
-                .presentationDetents([.medium])
         }
     }
 }
