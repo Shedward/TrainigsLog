@@ -10,7 +10,7 @@ import SwiftData
 @Model
 class Exercise {
     @Attribute(.unique) var name: String
-    @Relationship(inverse: \MuscleLoad.exercise) var muscleLoads: [MuscleLoad]
+    @Relationship(deleteRule: .cascade, inverse: \MuscleLoad.exercise) var muscleLoads: [MuscleLoad]
 
     init(name: String, muscleLoads: [MuscleLoad] = []) {
         self.name = name

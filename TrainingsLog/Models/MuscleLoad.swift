@@ -9,11 +9,11 @@ import SwiftData
 
 @Model
 class MuscleLoad {
-    var muscle: Muscle
-    var exercise: Exercise
+    var muscle: Muscle?
+    var exercise: Exercise?
     var loadFraction: Double
 
-    init(muscle: Muscle, exercise: Exercise, loadFraction: Double) {
+    init(muscle: Muscle, exercise: Exercise, loadFraction: Double = 1.0) {
         self.muscle = muscle
         self.exercise = exercise
         self.loadFraction = loadFraction

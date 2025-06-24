@@ -17,6 +17,7 @@ struct MuscleCell: View {
 
             if let category = muscle.category {
                 Text(category)
+                    .foregroundStyle(.secondary)
             }
         }
         .frame(minHeight: 32)

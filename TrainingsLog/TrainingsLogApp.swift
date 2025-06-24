@@ -16,7 +16,8 @@ struct TrainingsLogApp: App {
             Exercise.self,
             MuscleLoad.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        let modelConfiguration = ModelConfiguration(schema: schema)
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])

@@ -1,5 +1,5 @@
 //
-//  CreateMuscle.swift
+//  EditMuscle.swift
 //  TrainingsLog
 //
 //  Created by Vlad Maltsev on 17.06.2025.
@@ -8,19 +8,22 @@
 import SwiftUI
 import SwiftData
 
-struct CreateMuscle: View {
+struct EditMuscle: View {
 
-    @State var name: String = ""
-    @State var category: String? = ""
+    @Bindable var muscle: Muscle
 
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
 
+    init(muscle: Muscle = Muscle(name: "")) {
+        self._muscle = .init(muscle)
+    }
+
     var body: some View {
         NavigationStack {
             UniversalForm {
-                TextField("Name", text: $name)
-                TextField("Category", text: $category.unwrappedOr(""))
+                TextField("Name", text: $muscle.name)
+                TextField("Category", text: $muscle.category.unwrappedOr(""))
             }
             .toolbar {
                 Spacer()
@@ -28,12 +31,11 @@ struct CreateMuscle: View {
                     dismiss()
                 }
                 Button.save {
-                    let muscle = Muscle(name: name, category: category?.nonWhitespace)
                     modelContext.insert(muscle)
                     dismiss()
                 }
                 .keyboardShortcut(.defaultAction)
-                .disabled(name.isEmpty)
+                .disabled(muscle.name.isEmpty)
             }
         }
         .presentationDetents([.fraction(0.25), .large])

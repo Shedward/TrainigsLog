@@ -17,6 +17,10 @@ extension Button {
         Button("Save", systemImage: "checkmark", action: action)
     }
 
+    static func done(_ action: @escaping () -> Void) -> Self where Label == SwiftUI.Label<Text, Image> {
+        Button("Done", systemImage: "checkmark", action: action)
+    }
+
     static func cancel(_ action: @escaping () -> Void) -> Self where Label == SwiftUI.Label<Text, Image> {
         Button("Cancel", systemImage: "xmark", role: .cancel, action: action)
     }

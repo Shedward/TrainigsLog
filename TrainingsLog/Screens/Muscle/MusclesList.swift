@@ -23,10 +23,12 @@ struct MusclesList: View {
                     .swipeActions {
                         Button.delete {
                             withAnimation {
-                                for muscleLoad in muscle.muscleLoads {
-                                    modelContext.delete(muscleLoad)
+                                try? modelContext.transaction {
+                                    for muscleLoad in muscle.muscleLoads {
+                                        modelContext.delete(muscleLoad)
+                                    }
+                                    modelContext.delete(muscle)
                                 }
-                                modelContext.delete(muscle)
                             }
                         }
                     }
@@ -41,7 +43,7 @@ struct MusclesList: View {
             .animation(.default, value: muscles)
         }
         .sheet(isPresented: $openCreateMuscleSheet) {
-            CreateMuscle()
+            EditMuscle()
         }
     }
 }

@@ -14,15 +14,21 @@ struct ExercisesList: View {
     var exercises: [Exercise] = []
 
     @State var openCreateExerciseSheet: Bool = false
+    @State var openEditExerciseSheet: Exercise?
     @Environment(\.modelContext) var modelContext
 
     var body: some View {
         NavigationStack {
             List(exercises) { exercise in
-                ExerciseCell(exercise: exercise)
-                    .swipeActions {
-                        Button.delete {
-                            withAnimation {
+                Cell {
+                    ExerciseCell(exercise: exercise)
+                } onTap: {
+                    openEditExerciseSheet = exercise
+                }
+                .swipeActions {
+                    Button.delete {
+                        withAnimation {
+                            try? modelContext.transaction {
                                 for muscleLoad in exercise.muscleLoads {
                                     modelContext.delete(muscleLoad)
                                 }
@@ -30,6 +36,8 @@ struct ExercisesList: View {
                             }
                         }
                     }
+                }
+                
             }.toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button.add {
@@ -41,7 +49,10 @@ struct ExercisesList: View {
             .animation(.default, value: exercises)
         }
         .sheet(isPresented: $openCreateExerciseSheet) {
-            CreateExercise()
+            EditExercise()
+        }
+        .sheet(item: $openEditExerciseSheet) { exercise in
+            EditExercise(exercise: exercise)
         }
     }
 }

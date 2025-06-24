@@ -18,7 +18,7 @@ struct MusclePicker: View {
         ) { muscle in
             MuscleCell(muscle: muscle)
         } createScreen: {
-            CreateMuscle()
+            EditMuscle()
         }
     }
 }
@@ -39,7 +39,7 @@ struct MuscleSelector: View {
         ) { muscle in
             MuscleCell(muscle: muscle)
         } createScreen: {
-            CreateMuscle()
+            EditMuscle()
         } onSelect: { muscle in
             onSelect(muscle)
         }

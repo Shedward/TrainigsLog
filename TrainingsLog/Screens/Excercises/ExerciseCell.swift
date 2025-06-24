@@ -19,6 +19,8 @@ struct ExerciseCell: View {
 
             if let musclesDescription {
                 Text(musclesDescription)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
         }
         .frame(minHeight: 32)
@@ -35,7 +37,7 @@ struct ExerciseCell: View {
     private func updateMusclesDescription() {
         musclesDescription = exercise.muscleLoads
             .sorted(using: SortDescriptor(\.loadFraction, order: .forward))
-            .map(\.muscle.name)
+            .compactMap(\.muscle?.name)
             .joined(separator: ", ")
     }
 }
