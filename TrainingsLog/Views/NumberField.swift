@@ -30,7 +30,9 @@ struct NumberField: View {
 
     var body: some View {
         TextField(label, text: $text)
+        #if os(iOS)
             .keyboardType(.decimalPad)
+        #endif
             .focused($isFocused)
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {

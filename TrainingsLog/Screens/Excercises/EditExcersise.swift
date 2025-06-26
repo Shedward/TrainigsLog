@@ -12,8 +12,9 @@ struct EditExercise: View {
 
     @Bindable private var exercise: Exercise
 
-    @Environment(\.modelContext) var modelContext
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @Environment(ErrorHandler.self) private var errorHandler
 
     @State private var openAddMuscleLoad: Bool = false
 
@@ -32,7 +33,7 @@ struct EditExercise: View {
                             .swipeActions {
                                 Button.delete {
                                     withAnimation {
-                                        try? modelContext.transaction {
+                                        errorHandler.try {
                                             modelContext.delete(muscleLoad)
                                             exercise.muscleLoads.removeAll { $0.id == muscleLoad.id }
                                         }
@@ -46,19 +47,23 @@ struct EditExercise: View {
                 }
             }
             .toolbar {
-                Spacer()
-                Button.cancel {
-                    dismiss()
-                }
-                Button.save {
-                    try? modelContext.transaction {
-                        modelContext.insert(exercise)
-                        exercise.muscleLoads.forEach { modelContext.insert($0) }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button.cancel {
+                        dismiss()
                     }
-                    dismiss()
                 }
-                .keyboardShortcut(.defaultAction)
-                .disabled(exercise.name.isEmpty)
+
+                ToolbarItem(placement: .primaryAction) {
+                    Button.save {
+                        try? modelContext.transaction {
+                            modelContext.insert(exercise)
+                            exercise.muscleLoads.forEach { modelContext.insert($0) }
+                        }
+                        dismiss()
+                    }
+                    .keyboardShortcut(.defaultAction)
+                    .disabled(exercise.name.isEmpty)
+                }
             }
         }
         .sheet(isPresented: $openAddMuscleLoad) {

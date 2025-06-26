@@ -1,29 +1,29 @@
 //
-//  EditMuscle.swift
+//  EditTraining.swift
 //  TrainingsLog
 //
-//  Created by Vlad Maltsev on 17.06.2025.
+//  Created by Vlad Maltsev on 26.06.2025.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
-struct EditMuscle: View {
+struct EditTraining: View {
 
-    @Bindable var muscle: Muscle
+    @Bindable var training: Training
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
-    init(muscle: Muscle = Muscle(name: "")) {
-        self._muscle = .init(muscle)
+    init(training: Training = Training()) {
+        self._training = .init(training)
     }
 
     var body: some View {
         NavigationStack {
             UniversalForm {
-                TextField("Name", text: $muscle.name)
-                TextField("Category", text: $muscle.category.unwrappedOr(""))
+                DatePicker("Date", selection: $training.date)
+                ExercisePicker(selection: $training.exercise)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -34,14 +34,12 @@ struct EditMuscle: View {
 
                 ToolbarItem(placement: .primaryAction) {
                     Button.save {
-                        modelContext.insert(muscle)
+                        modelContext.insert(training)
                         dismiss()
                     }
-                    .keyboardShortcut(.defaultAction)
-                    .disabled(muscle.name.isEmpty)
                 }
             }
         }
-        .presentationDetents([.fraction(0.25), .large])
+        .presentationDetents([.medium, .large])
     }
 }

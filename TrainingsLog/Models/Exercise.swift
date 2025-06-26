@@ -5,6 +5,7 @@
 //  Created by Vlad Maltsev on 20.06.2025.
 //
 
+import SwiftUI
 import SwiftData
 
 @Model
@@ -15,6 +16,19 @@ class Exercise {
     init(name: String, muscleLoads: [MuscleLoad] = []) {
         self.name = name
         self.muscleLoads = muscleLoads
+    }
+
+    func delete(in modelContext: ModelContext? = nil) throws {
+        guard let modelContext = modelContext ?? self.modelContext else {
+            throw AppError("Model context not found")
+        }
+
+        try modelContext.transaction {
+            for muscleLoad in muscleLoads {
+                modelContext.delete(muscleLoad)
+            }
+            modelContext.delete(self)
+        }
     }
 }
 

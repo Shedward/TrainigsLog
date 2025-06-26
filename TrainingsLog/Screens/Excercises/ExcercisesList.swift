@@ -16,6 +16,7 @@ struct ExercisesList: View {
     @State var openCreateExerciseSheet: Bool = false
     @State var openEditExerciseSheet: Exercise?
     @Environment(\.modelContext) var modelContext
+    @Environment(ErrorHandler.self) private var errorHandler
 
     var body: some View {
         NavigationStack {
@@ -28,11 +29,8 @@ struct ExercisesList: View {
                 .swipeActions {
                     Button.delete {
                         withAnimation {
-                            try? modelContext.transaction {
-                                for muscleLoad in exercise.muscleLoads {
-                                    modelContext.delete(muscleLoad)
-                                }
-                                modelContext.delete(exercise)
+                            errorHandler.try {
+                                try exercise.delete()
                             }
                         }
                     }

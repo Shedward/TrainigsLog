@@ -12,6 +12,10 @@ struct ExerciseCell: View {
 
     @State private var musclesDescription: String?
 
+    init(exercise: Exercise) {
+        self.exercise = exercise
+    }
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(exercise.name)

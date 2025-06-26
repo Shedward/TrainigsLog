@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  Trainings.swift
 //  TrainingsLog
 //
 //  Created by Vlad Maltsev on 17.06.2025.
@@ -8,40 +8,41 @@
 import SwiftUI
 import SwiftData
 
-struct MusclesList: View {
+struct TrainingsList: View {
 
-    @Query(sort: \Muscle.name, animation: .default)
-    var muscles: [Muscle] = []
+    @Query(sort: \Training.date, animation: .default)
+    var trainings: [Training] = []
 
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
     @Environment(ErrorHandler.self) private var errorHandler
-    @State private var openCreateMuscleSheet: Bool = false
+    @State private var openCreateTrainingSheet: Bool = false
 
     var body: some View {
         NavigationStack {
-            List(muscles) { muscle in
-                MuscleCell(muscle: muscle)
+            List(trainings) { training in
+                TrainingCell(training: training)
                     .swipeActions {
                         Button.delete {
                             withAnimation {
                                 errorHandler.try {
-                                    try muscle.delete()
+                                    try training.delete()
                                 }
                             }
                         }
                     }
-            }.toolbar {
+            }
+            .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button.add {
-                        openCreateMuscleSheet = true
+                        openCreateTrainingSheet = true
                     }
                     .keyboardShortcut("N", modifiers: .command)
                 }
             }
-            .animation(.default, value: muscles)
+            .animation(.default, value: trainings)
         }
-        .sheet(isPresented: $openCreateMuscleSheet) {
-            EditMuscle()
+        .sheet(isPresented: $openCreateTrainingSheet) {
+            EditTraining()
         }
     }
 }

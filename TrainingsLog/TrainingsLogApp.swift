@@ -10,21 +10,26 @@ import SwiftData
 
 @main
 struct TrainingsLogApp: App {
-    var sharedModelContainer: ModelContainer = {
+    let sharedModelContainer: ModelContainer
+
+    init() {
+        TrainingLoadTransformable.register()
+
         let schema = Schema([
             Muscle.self,
             Exercise.self,
-            MuscleLoad.self
+            MuscleLoad.self,
+            Training.self
         ])
 
-        let modelConfiguration = ModelConfiguration(schema: schema)
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            self.sharedModelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -41,5 +46,6 @@ struct TrainingsLogApp: App {
             }
         }
         .modelContainer(sharedModelContainer)
+        .environment(ErrorHandler())
     }
 }
