@@ -11,7 +11,7 @@ struct TrainingCell: View {
     let training: Training
 
     var body: some View {
-        HStack(alignment: .lastTextBaseline) {
+        HStack(alignment: .firstTextBaseline) {
             Text(training.exercise?.name ?? String(localized: "-"))
             Spacer()
             VStack(alignment: .trailing) {

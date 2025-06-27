@@ -22,7 +22,7 @@ struct TrainingsLogApp: App {
             Training.self
         ])
 
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        let modelConfiguration = ModelConfiguration(schema: schema)
 
         do {
             self.sharedModelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
