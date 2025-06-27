@@ -10,17 +10,17 @@ import SwiftUI
 struct TrainingLoadPicker: View {
     @Binding var trainingLoad: TrainingLoad
 
-    @State private var selectedKind: Kind = .raw
+    @State private var selectedKind: TrainingLoad.Kind = .raw
 
     init(trainingLoad: Binding<TrainingLoad>) {
         self._trainingLoad = trainingLoad
-        selectedKind = Kind(trainingLoad.wrappedValue)
+        selectedKind = TrainingLoad.Kind(trainingLoad.wrappedValue)
     }
 
     var body: some View {
         Section("Load") {
             Picker("Type", selection: $selectedKind) {
-                ForEach(Kind.allCases, id: \.self) { kind in
+                ForEach(TrainingLoad.Kind.allCases, id: \.self) { kind in
                     Text(kind.displayName).tag(kind)
                 }
             }
@@ -30,73 +30,23 @@ struct TrainingLoadPicker: View {
                 RawFields($trainingLoad)
             case .weight:
                 WeightFields($trainingLoad)
+            case .addingWeight:
+                AddingWeightFields($trainingLoad)
             case .negativeWeight:
-                EmptyView()
+                NegativeWeightFields($trainingLoad)
             case .distance:
-                EmptyView()
+                DistanceFields($trainingLoad)
             case .repetitions:
-                EmptyView()
+                RepetitionsFields($trainingLoad)
             }
         }
         .onChange(of: trainingLoad) { _, newValue in
-            selectedKind = Kind(trainingLoad)
+            selectedKind = TrainingLoad.Kind(trainingLoad)
         }
     }
 }
 
 extension TrainingLoadPicker {
-    enum Kind: CaseIterable {
-        case raw
-        case weight
-        case negativeWeight
-        case distance
-        case repetitions
-
-        init(_ load: TrainingLoad) {
-            switch load {
-            case .raw:
-                self = .raw
-            case .weights:
-                self = .weight
-            case .negativeWeight:
-                self = .negativeWeight
-            case .distance:
-                self = .distance
-            case .repetitions:
-                self = .repetitions
-            }
-        }
-
-        var displayName: LocalizedStringKey {
-            switch self {
-            case .raw:
-                "Raw"
-            case .weight:
-                "Weight"
-            case .negativeWeight:
-                "Negative weight"
-            case .distance:
-                "Distance"
-            case .repetitions:
-                "Repetitions"
-            }
-        }
-
-        var defaultLoad: TrainingLoad {
-            switch self {
-            case .raw:
-                TrainingLoad.raw(.zero)
-            case .weight:
-                TrainingLoad.weights(.zero)
-            case .negativeWeight:
-                TrainingLoad.negativeWeight(.zero)
-            case .distance:
-                TrainingLoad.distance(.zero)
-            case .repetitions:
-                TrainingLoad.repetitions(.zero)
-            }
-        }
-    }
 
     struct RawFields: View {
         @Binding var raw: TrainingLoad.Raw?
@@ -136,6 +86,92 @@ extension TrainingLoadPicker {
         var body: some View {
             NumberField(label: "Repetitions", unit: "reps", value: $weight.unwrappedOr(.zero).reps)
             NumberField(label: "Weight", unit: "kg", value: $weight.unwrappedOr(.zero).weight.value)
+        }
+    }
+
+    struct AddingWeightFields: View {
+        @Binding var addingWeight: TrainingLoad.AddingWeights?
+
+        init(_ load: Binding<TrainingLoad>) {
+            self._addingWeight = load.transform {
+                if case .addingWeights(let value) = $0 {
+                    value
+                } else {
+                    nil
+                }
+            } to: {
+                .addingWeights($0 ?? .zero)
+            }
+        }
+
+        var body: some View {
+            NumberField(label: "Initial Weight", unit: "kg", value: $addingWeight.unwrappedOr(.zero).initialWeight.value)
+            NumberField(label: "Reps", unit: "reps", value: $addingWeight.unwrappedOr(.zero).reps)
+            NumberField(label: "Weight", unit: "+kg", value: $addingWeight.unwrappedOr(.zero).weight.value)
+        }
+    }
+
+    struct NegativeWeightFields: View {
+        @Binding var negativeWeight: TrainingLoad.NegativeWeights?
+
+        init(_ load: Binding<TrainingLoad>) {
+            self._negativeWeight = load.transform {
+                if case .negativeWeights(let value) = $0 {
+                    value
+                } else {
+                    nil
+                }
+            } to: {
+                .negativeWeights($0 ?? .zero)
+            }
+        }
+
+        var body: some View {
+            NumberField(label: "Body Weight", unit: "kg", value: $negativeWeight.unwrappedOr(.zero).bodyWeight.value)
+            NumberField(label: "Reps", unit: "reps", value: $negativeWeight.unwrappedOr(.zero).reps)
+            NumberField(label: "Negative Weight", unit: "-kg", value: $negativeWeight.unwrappedOr(.zero).negativeWeight.value)
+        }
+    }
+
+    struct DistanceFields: View {
+        @Binding var distance: TrainingLoad.Distance?
+        
+        init(_ load: Binding<TrainingLoad>) {
+            self._distance = load.transform {
+                if case .distance(let value) = $0 {
+                    value
+                } else {
+                    nil
+                }
+            } to: {
+                .distance($0 ?? .zero)
+            }
+        }
+
+        var body: some View {
+            NumberField(label: "Load Per Distance", unit: "kg/m", value: $distance.unwrappedOr(.zero).loadPerMeter)
+            NumberField(label: "Distance", unit: "m", value: $distance.unwrappedOr(.zero).distance.value)
+        }
+    }
+
+    struct RepetitionsFields: View {
+        @Binding var repetitions: TrainingLoad.Repetitions?
+        
+        init(_ load: Binding<TrainingLoad>) {
+            self._repetitions = load.transform {
+                if case .repetitions(let value) = $0 {
+                    value
+                } else {
+                    nil
+                }
+            } to: {
+                .repetitions($0 ?? .zero)
+            }
+        }
+
+        var body: some View {
+            NumberField(label: "Load Per Repetition", unit: "kg/rep", value: $repetitions.unwrappedOr(.zero).loadPerRep)
+            NumberField(label: "Repetitions", unit: "reps", value: $repetitions.unwrappedOr(.zero).count)
         }
     }
 }

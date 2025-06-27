@@ -5,6 +5,7 @@
 //  Created by Vlad Maltsev on 26.06.2025.
 //
 
+import SwiftUI
 import SwiftData
 import Foundation
 
@@ -20,7 +21,8 @@ enum TrainingLoad: TrainingLoadRepresentable {
 
     case raw(Raw)
     case weights(Weights)
-    case negativeWeight(NegativeWeights)
+    case addingWeights(AddingWeights)
+    case negativeWeights(NegativeWeights)
     case distance(Distance)
     case repetitions(Repetitions)
 
@@ -30,7 +32,9 @@ enum TrainingLoad: TrainingLoadRepresentable {
             value.totalLoad
         case .weights(let value):
             value.totalLoad
-        case .negativeWeight(let value):
+        case .addingWeights(let value):
+            value.totalLoad
+        case .negativeWeights(let value):
             value.totalLoad
         case .distance(let value):
             value.totalLoad
@@ -45,7 +49,9 @@ enum TrainingLoad: TrainingLoadRepresentable {
             value.workingLoad
         case .weights(let value):
             value.workingLoad
-        case .negativeWeight(let value):
+        case .addingWeights(let value):
+            value.workingLoad
+        case .negativeWeights(let value):
             value.workingLoad
         case .distance(let value):
             value.workingLoad
@@ -60,7 +66,9 @@ enum TrainingLoad: TrainingLoadRepresentable {
             value.displayValue
         case .weights(let value):
             value.displayValue
-        case .negativeWeight(let value):
+        case .addingWeights(let value):
+            value.displayValue
+        case .negativeWeights(let value):
             value.displayValue
         case .distance(let value):
             value.displayValue
@@ -104,7 +112,7 @@ enum TrainingLoad: TrainingLoadRepresentable {
         }
 
         var displayValue: String {
-            "\(reps) x \(weight.formatted())"
+            String(localized: "\(reps) x \(weight.formatted())")
         }
     }
 
@@ -125,7 +133,28 @@ enum TrainingLoad: TrainingLoadRepresentable {
         }
 
         var displayValue: String {
-            "\(reps) x \(negativeWeight.formatted())"
+            String(localized: "\(reps) x -\(negativeWeight.formatted())")
+        }
+    }
+
+    struct AddingWeights: TrainingLoadRepresentable {
+
+        static let zero = Self(initialWeight: .zero, weight: .zero, reps: 0)
+
+        var initialWeight: WeightValue
+        var weight: WeightValue
+        var reps: Int
+
+        var totalLoad: Double {
+            (initialWeight + weight).value * Double(reps)
+        }
+
+        var workingLoad: Double {
+            (initialWeight + weight).value
+        }
+
+        var displayValue: String {
+            String(localized: "\(reps) x +\(weight.formatted())")
         }
     }
 
@@ -166,6 +195,66 @@ enum TrainingLoad: TrainingLoadRepresentable {
 
         var displayValue: String {
             count.formatted(.number)
+        }
+    }
+
+    enum Kind: CaseIterable {
+        case raw
+        case weight
+        case addingWeight
+        case negativeWeight
+        case distance
+        case repetitions
+
+        init(_ load: TrainingLoad) {
+            switch load {
+            case .raw:
+                self = .raw
+            case .weights:
+                self = .weight
+            case .addingWeights:
+                self = .addingWeight
+            case .negativeWeights:
+                self = .negativeWeight
+            case .distance:
+                self = .distance
+            case .repetitions:
+                self = .repetitions
+            }
+        }
+
+        var displayName: LocalizedStringKey {
+            switch self {
+            case .raw:
+                "Raw"
+            case .weight:
+                "Weight"
+            case .addingWeight:
+                "Adding weight"
+            case .negativeWeight:
+                "Negative weight"
+            case .distance:
+                "Distance"
+            case .repetitions:
+                "Repetitions"
+            }
+        }
+
+        var defaultLoad: TrainingLoad {
+            switch self {
+            case .raw:
+                TrainingLoad.raw(.zero)
+            case .addingWeight:
+                TrainingLoad.addingWeights(.zero)
+            case .weight:
+                TrainingLoad.weights(.zero)
+            case .negativeWeight:
+                TrainingLoad.negativeWeights(.zero)
+            case .distance:
+                TrainingLoad.distance(.zero)
+            case .repetitions:
+                TrainingLoad.repetitions(.zero)
+            }
         }
     }
 }
