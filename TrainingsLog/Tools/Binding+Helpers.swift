@@ -14,6 +14,13 @@ extension Binding {
         } set: { new in
             self.wrappedValue = new
         }
+    }
 
+    func transform<T>(from: @escaping (Value) -> T, to: @escaping (T) -> Value) -> Binding<T> {
+        Binding<T> {
+            from(self.wrappedValue)
+        } set: { new in
+            self.wrappedValue = to(new)
+        }
     }
 }

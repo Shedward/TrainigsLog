@@ -24,7 +24,7 @@ struct EditTraining: View {
             UniversalForm {
                 DatePicker("Date", selection: $training.date)
                 ExercisePicker(selection: $training.exercise)
-                TrainingLoadEditor(trainingLoad: $training.load)
+                TrainingLoadPicker(trainingLoad: $training.load)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

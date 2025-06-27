@@ -34,12 +34,29 @@ struct ModelPicker<T: PersistentModel, RowContent: View, CreateScreen: View>: Vi
 
     var body: some View {
         LabeledContent(name) {
+            let selected = selection.map { $0[keyPath: field] } ?? String(localized: "")
+            #if os(macOS)
+            Button {
+                openPicker = true
+            } label: {
+                HStack {
+                    Text(selected)
+                    Spacer()
+                    Image(systemName: "chevron.up.chevron.down")
+                        .foregroundStyle(Color.white)
+                        .font(.system(size: 10, weight: .bold))
+                        .padding(.horizontal, 3.5)
+                        .padding(.vertical, 2)
+                        .background(Color.blue)
+                        .cornerRadius(4)
+                        .offset(x: 6)
+                }
+            }
+            #else
             Cell {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Spacer()
-                    Text(
-                        selection.map { $0[keyPath: field] } ?? String(localized: "")
-                    )
+                    Text(selected)
                     Image(systemName: "chevron.up.chevron.down")
                         .font(.system(size: 13, weight: .medium))
                 }
@@ -47,6 +64,7 @@ struct ModelPicker<T: PersistentModel, RowContent: View, CreateScreen: View>: Vi
             } onTap: {
                 openPicker = true
             }
+            #endif
         }
         .sheet(isPresented: $openPicker) {
             ModelSelector(

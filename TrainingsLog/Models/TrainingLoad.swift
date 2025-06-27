@@ -70,6 +70,9 @@ enum TrainingLoad: TrainingLoadRepresentable {
     }
 
     struct Raw: TrainingLoadRepresentable {
+
+        static let zero = Self(value: .zero)
+
         var value: WeightValue
 
         var totalLoad: Double {
@@ -86,6 +89,9 @@ enum TrainingLoad: TrainingLoadRepresentable {
     }
 
     struct Weights: TrainingLoadRepresentable {
+
+        static let zero = Self(weight: .zero, reps: 0)
+
         var weight: WeightValue
         var reps: Int
 
@@ -103,6 +109,9 @@ enum TrainingLoad: TrainingLoadRepresentable {
     }
 
     struct NegativeWeights: TrainingLoadRepresentable {
+
+        static let zero = Self(bodyWeight: .zero, negativeWeight: .zero, reps: 0)
+
         var bodyWeight: WeightValue
         var negativeWeight: WeightValue
         var reps: Int
@@ -121,6 +130,9 @@ enum TrainingLoad: TrainingLoadRepresentable {
     }
 
     struct Distance: TrainingLoadRepresentable {
+
+        static let zero = Self(distance: .zero, loadPerMeter: 0)
+
         var distance: DistanceValue
         var loadPerMeter: Double
 
@@ -138,6 +150,9 @@ enum TrainingLoad: TrainingLoadRepresentable {
     }
 
     struct Repetitions: TrainingLoadRepresentable {
+
+        static let zero = Self(count: 0, loadPerRep: 0)
+
         var count: Int
         var loadPerRep: Double
 

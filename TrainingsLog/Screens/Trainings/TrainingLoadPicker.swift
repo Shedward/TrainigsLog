@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TrainingLoadEditor: View {
+struct TrainingLoadPicker: View {
     @Binding var trainingLoad: TrainingLoad
 
     @State private var selectedKind: Kind = .raw
@@ -18,9 +18,24 @@ struct TrainingLoadEditor: View {
     }
 
     var body: some View {
-        Picker("Type", selection: $selectedKind) {
-            ForEach(Kind.allCases, id: \.self) { kind in
-                Text(kind.displayName).tag(kind)
+        Group {
+            Picker("Type", selection: $selectedKind) {
+                ForEach(Kind.allCases, id: \.self) { kind in
+                    Text(kind.displayName).tag(kind)
+                }
+            }
+
+            switch selectedKind {
+            case .raw:
+                RawFields($trainingLoad)
+            case .weight:
+                EmptyView()
+            case .negativeWeight:
+                EmptyView()
+            case .distance:
+                EmptyView()
+            case .repetitions:
+                EmptyView()
             }
         }
         .onChange(of: trainingLoad) { _, newValue in
@@ -29,7 +44,7 @@ struct TrainingLoadEditor: View {
     }
 }
 
-extension TrainingLoadEditor {
+extension TrainingLoadPicker {
     enum Kind: CaseIterable {
         case raw
         case weight
@@ -70,18 +85,36 @@ extension TrainingLoadEditor {
         var defaultLoad: TrainingLoad {
             switch self {
             case .raw:
-                TrainingLoad.raw(.init(value: .zero))
+                TrainingLoad.raw(.zero)
             case .weight:
-                TrainingLoad.weights(.init(weight: .zero, reps: 0))
+                TrainingLoad.weights(.zero)
             case .negativeWeight:
-                TrainingLoad.negativeWeight(
-                    .init(bodyWeight: .zero, negativeWeight: .zero, reps: 0)
-                )
+                TrainingLoad.negativeWeight(.zero)
             case .distance:
-                TrainingLoad.distance(.init(distance: .zero, loadPerMeter: 0))
+                TrainingLoad.distance(.zero)
             case .repetitions:
-                TrainingLoad.repetitions(.init(count: 0, loadPerRep: 0))
+                TrainingLoad.repetitions(.zero)
             }
+        }
+    }
+
+    struct RawFields: View {
+        @Binding var raw: TrainingLoad.Raw?
+
+        init(_ load: Binding<TrainingLoad>) {
+            self._raw = load.transform {
+                if case .raw(let value) = $0 {
+                    value
+                } else {
+                    nil
+                }
+            } to: {
+                .raw($0 ?? .zero)
+            }
+        }
+
+        var body: some View {
+            Text("Raw editor")
         }
     }
 }
