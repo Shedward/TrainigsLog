@@ -14,7 +14,13 @@ struct TrainingCell: View {
         HStack(alignment: .lastTextBaseline) {
             Text(training.exercise?.name ?? String(localized: "-"))
             Spacer()
-            Text(training.load.displayValue)
+            VStack {
+                Text(training.load.displayValue)
+                    .bold()
+                Text(training.workingLoad.formatted(.number.precision(.fractionLength(2))))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }

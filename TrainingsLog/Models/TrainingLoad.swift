@@ -8,13 +8,13 @@
 import SwiftData
 import Foundation
 
-protocol TrainingLoadRepresentable: Codable {
+protocol TrainingLoadRepresentable: Codable, Equatable {
     var totalLoad: Double { get }
     var workingLoad: Double { get }
     var displayValue: String { get }
 }
 
-enum TrainingLoad: TrainingLoadRepresentable, Codable {
+enum TrainingLoad: TrainingLoadRepresentable {
 
     static let zero = TrainingLoad.raw(.init(value: .zero))
 
@@ -156,7 +156,7 @@ enum TrainingLoad: TrainingLoadRepresentable, Codable {
 }
 
 
-struct WeightValue: Codable {
+struct WeightValue: Codable, Equatable {
     var value: Double
 
     static let zero = Self(value: 0)
@@ -174,7 +174,7 @@ struct WeightValue: Codable {
     }
 }
 
-struct DistanceValue: Codable {
+struct DistanceValue: Codable, Equatable {
     var value: Double
 
     static let zero = Self(value: 0)
@@ -186,12 +186,12 @@ struct DistanceValue: Codable {
 
 struct WeightValueFormatStyle: FormatStyle {
     public func format(_ value: WeightValue) -> String {
-        Measurement(value: value.value, unit: UnitMass.kilograms).formatted(.measurement(width: .abbreviated))
+        Measurement(value: value.value, unit: UnitMass.kilograms).formatted(.measurement(width: .abbreviated, usage: .asProvided))
     }
 }
 
 struct DistanceValueFormatStyle: FormatStyle {
     public func format(_ value: DistanceValue) -> String {
-        Measurement(value: value.value, unit: UnitLength.meters).formatted(.measurement(width: .abbreviated))
+        Measurement(value: value.value, unit: UnitLength.meters).formatted(.measurement(width: .abbreviated, usage: .asProvided))
     }
 }

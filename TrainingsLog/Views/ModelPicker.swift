@@ -35,16 +35,15 @@ struct ModelPicker<T: PersistentModel, RowContent: View, CreateScreen: View>: Vi
     var body: some View {
         LabeledContent(name) {
             Cell {
-                HStack(alignment: .firstTextBaseline) {
-                    if let selection {
-                        Text(selection[keyPath: field])
-                    } else {
-                        Text("Select...")
-                            .foregroundColor(.secondary)
-                    }
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Spacer()
-                    Image(systemName: "chevron.down")
+                    Text(
+                        selection.map { $0[keyPath: field] } ?? String(localized: "")
+                    )
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.system(size: 13, weight: .medium))
                 }
+                .foregroundColor(.secondary)
             } onTap: {
                 openPicker = true
             }

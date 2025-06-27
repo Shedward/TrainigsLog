@@ -16,7 +16,6 @@ class Training {
     private(set) var totalLoad: Double = 0
     private(set) var workingLoad: Double = 0
 
-//    @Attribute(.transformable(by: TrainingLoadTransformable.self))
     var load: TrainingLoad {
         didSet {
             totalLoad = load.totalLoad
