@@ -28,14 +28,18 @@ struct NumberField<Value: NumberFieldValue>: View {
                     Text(unit)
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                        #if os(iOS)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 4)
                         .background(.background, in: RoundedRectangle(cornerSize: CGSize(width: 8, height: 8)))
+                        #else
+                        .padding(.trailing, 4)
+                        #endif
                 }
             }
-        #if os(iOS)
+            #if os(iOS)
             .keyboardType(.decimalPad)
-        #endif
+            #endif
             .onChange(of: text) { oldValue, newValue in
                 let newValue = Value.from(string: text)
                 if let newValue, newValue != value {
