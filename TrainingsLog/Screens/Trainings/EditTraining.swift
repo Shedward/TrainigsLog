@@ -25,9 +25,12 @@ struct EditTraining: View {
                 DatePicker("Date", selection: $training.date)
                 ExercisePicker(selection: $training.exercise)
                 TrainingLoadPicker(trainingLoad: $training.load)
-                DifficultyPicker($training.difficulty)
-                LabeledContent("Comment") {
-                    TextEditor(text: $training.comment.unwrappedOr(""))
+
+                Section("State") {
+                    DifficultyPicker($training.difficulty)
+                    LabeledContent("Comment") {
+                        TextEditor(text: $training.comment.unwrappedOr(""))
+                    }
                 }
             }
             .toolbar {

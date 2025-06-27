@@ -13,6 +13,7 @@ struct TrainingCell: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             Text(training.exercise?.name ?? String(localized: "-"))
+                .bold()
             Spacer()
             VStack(alignment: .trailing) {
                 Text(training.load.displayValue)
@@ -22,5 +23,8 @@ struct TrainingCell: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .frame(minHeight: 32)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 4)
     }
 }
