@@ -12,7 +12,6 @@ struct NumberField: View {
 
     @Binding var value: Double
     @State private var text: String
-    @FocusState private var isFocused: Bool
 
     private static let formatter: NumberFormatter = {
         let f = NumberFormatter()
@@ -31,25 +30,12 @@ struct NumberField: View {
     var body: some View {
         TextField(label, text: $text)
         #if os(iOS)
-            .keyboardType(.decimalPad)
+            .keyboardType(.numberPad)
         #endif
-            .focused($isFocused)
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    if isFocused {
-                        Spacer()
-                        Button.done {
-                            isFocused = false
-                            if let number = Self.formatter.number(from: text) {
-                                value = number.doubleValue
-                            }
-                        }
-                    }
-                }
-            }
-            .onSubmit {
-                if let number = Self.formatter.number(from: text) {
-                    value = number.doubleValue
+            .onChange(of: text) { oldValue, newValue in
+                let newValue = Self.formatter.number(from: text)?.doubleValue
+                if let newValue, newValue != value {
+                    value = newValue
                 }
             }
             .onChange(of: value) { _, newValue in
