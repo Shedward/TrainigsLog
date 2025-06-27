@@ -11,13 +11,26 @@ import Foundation
 @Model
 class Training {
     var date: Date
+    var trainingSession: TrainingSession?
     var exercise: Exercise?
     var load: TrainingLoad
+    var difficulty: Difficulty
+    var comment: String?
 
-    init(date: Date = Date(), exercise: Exercise? = nil, load: TrainingLoad = .zero) {
+    init(
+        date: Date = Date(),
+        trainingSession: TrainingSession? = nil,
+        exercise: Exercise? = nil,
+        load: TrainingLoad = .zero,
+        difficulty: Difficulty = .normal,
+        comment: String? = nil
+    ) {
         self.date = date
+        self.trainingSession = trainingSession
         self.exercise = exercise
         self.load = load
+        self.difficulty = difficulty
+        self.comment = comment
     }
 
     func delete(in modelContext: ModelContext? = nil) throws {

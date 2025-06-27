@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Foundation
 
 @main
 struct TrainingsLogApp: App {
@@ -19,10 +20,12 @@ struct TrainingsLogApp: App {
             Muscle.self,
             Exercise.self,
             MuscleLoad.self,
-            Training.self
+            Training.self,
+            TrainingSession.self
         ])
 
-        let modelConfiguration = ModelConfiguration(schema: schema)
+        let url = URL.documentsDirectory.appending(path: "TrainingsLog.sqlite")
+        let modelConfiguration = ModelConfiguration(schema: schema, url: url)
 
         do {
             self.sharedModelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
