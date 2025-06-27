@@ -12,16 +12,7 @@ import Foundation
 class Training {
     var date: Date
     var exercise: Exercise?
-
-    private(set) var totalLoad: Double = 0
-    private(set) var workingLoad: Double = 0
-
-    var load: TrainingLoad {
-        didSet {
-            totalLoad = load.totalLoad
-            workingLoad = load.workingLoad
-        }
-    }
+    var load: TrainingLoad
 
     init(date: Date = Date(), exercise: Exercise? = nil, load: TrainingLoad = .zero) {
         self.date = date

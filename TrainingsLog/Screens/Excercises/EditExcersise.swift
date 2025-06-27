@@ -55,11 +55,13 @@ struct EditExercise: View {
 
                 ToolbarItem(placement: .primaryAction) {
                     Button.save {
-                        try? modelContext.transaction {
-                            modelContext.insert(exercise)
-                            exercise.muscleLoads.forEach { modelContext.insert($0) }
+                        errorHandler.try {
+                            try modelContext.transaction {
+                                modelContext.insert(exercise)
+                                exercise.muscleLoads.forEach { modelContext.insert($0) }
+                            }
+                            dismiss()
                         }
-                        dismiss()
                     }
                     .keyboardShortcut(.defaultAction)
                     .disabled(exercise.name.isEmpty)

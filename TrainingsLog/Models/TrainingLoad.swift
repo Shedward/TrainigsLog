@@ -104,7 +104,7 @@ enum TrainingLoad: TrainingLoadRepresentable {
         }
 
         var displayValue: String {
-            "\(reps) x \(weight.formatted()))"
+            "\(reps) x \(weight.formatted())"
         }
     }
 

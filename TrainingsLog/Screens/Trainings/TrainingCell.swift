@@ -14,10 +14,10 @@ struct TrainingCell: View {
         HStack(alignment: .lastTextBaseline) {
             Text(training.exercise?.name ?? String(localized: "-"))
             Spacer()
-            VStack {
+            VStack(alignment: .trailing) {
                 Text(training.load.displayValue)
                     .bold()
-                Text(training.workingLoad.formatted(.number.precision(.fractionLength(2))))
+                Text(training.load.totalLoad.formatted(.number))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

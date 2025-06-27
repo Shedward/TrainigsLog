@@ -18,7 +18,7 @@ struct TrainingLoadPicker: View {
     }
 
     var body: some View {
-        Group {
+        Section("Load") {
             Picker("Type", selection: $selectedKind) {
                 ForEach(Kind.allCases, id: \.self) { kind in
                     Text(kind.displayName).tag(kind)
@@ -29,7 +29,7 @@ struct TrainingLoadPicker: View {
             case .raw:
                 RawFields($trainingLoad)
             case .weight:
-                EmptyView()
+                WeightFields($trainingLoad)
             case .negativeWeight:
                 EmptyView()
             case .distance:
@@ -114,7 +114,28 @@ extension TrainingLoadPicker {
         }
 
         var body: some View {
-            Text("Raw editor")
+            NumberField(label: "Load", unit: "kg", value: $raw.unwrappedOr(.zero).value.value)
+        }
+    }
+
+    struct WeightFields: View {
+        @Binding var weight: TrainingLoad.Weights?
+        
+        init(_ load: Binding<TrainingLoad>) {
+            self._weight = load.transform {
+                if case .weights(let value) = $0 {
+                    value
+                } else {
+                    nil
+                }
+            } to: {
+                .weights($0 ?? .zero)
+            }
+        }
+
+        var body: some View {
+            NumberField(label: "Repetitions", unit: "reps", value: $weight.unwrappedOr(.zero).reps)
+            NumberField(label: "Weight", unit: "kg", value: $weight.unwrappedOr(.zero).weight.value)
         }
     }
 }

@@ -110,6 +110,12 @@
         }
       }
     },
+    "kg" : {
+
+    },
+    "Load" : {
+
+    },
     "Model context not found" : {
       "localizations" : {
         "ru" : {
@@ -172,10 +178,10 @@
     "Raw" : {
 
     },
-    "Raw editor" : {
+    "Repetitions" : {
 
     },
-    "Repetitions" : {
+    "reps" : {
 
     },
     "Save" : {
