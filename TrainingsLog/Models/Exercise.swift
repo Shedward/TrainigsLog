@@ -13,7 +13,7 @@ class Exercise {
     @Attribute(.unique) var name: String
     @Relationship(deleteRule: .cascade, inverse: \MuscleLoad.exercise) var muscleLoads: [MuscleLoad]
 
-    init(name: String, muscleLoads: [MuscleLoad] = []) {
+    init(name: String = "", muscleLoads: [MuscleLoad] = []) {
         self.name = name
         self.muscleLoads = muscleLoads
     }

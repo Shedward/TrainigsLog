@@ -15,33 +15,37 @@ struct MusclesList: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(ErrorHandler.self) private var errorHandler
-    @State private var openCreateMuscleSheet: Bool = false
+    @State private var openEditMuscleSheet: Muscle?
 
     var body: some View {
         NavigationStack {
             List(muscles) { muscle in
-                MuscleCell(muscle: muscle)
-                    .swipeActions {
-                        Button.delete {
-                            withAnimation {
-                                errorHandler.try {
-                                    try muscle.delete()
-                                }
+                Cell {
+                    MuscleCell(muscle: muscle)
+                } onTap: {
+
+                }
+                .swipeActions {
+                    Button.delete {
+                        withAnimation {
+                            errorHandler.try {
+                                try muscle.delete()
                             }
                         }
                     }
+                }
             }.toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button.add {
-                        openCreateMuscleSheet = true
+                        openEditMuscleSheet = Muscle()
                     }
                     .keyboardShortcut("N", modifiers: .command)
                 }
             }
             .animation(.default, value: muscles)
         }
-        .sheet(isPresented: $openCreateMuscleSheet) {
-            EditMuscle()
+        .sheet(item: $openEditMuscleSheet) { muscle in
+            EditMuscle(muscle: muscle)
         }
     }
 }

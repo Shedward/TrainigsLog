@@ -13,7 +13,6 @@ struct ExercisesList: View {
     @Query(sort: \Exercise.name, animation: .default)
     var exercises: [Exercise] = []
 
-    @State var openCreateExerciseSheet: Bool = false
     @State var openEditExerciseSheet: Exercise?
     @Environment(\.modelContext) var modelContext
     @Environment(ErrorHandler.self) private var errorHandler
@@ -39,15 +38,12 @@ struct ExercisesList: View {
             }.toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button.add {
-                        openCreateExerciseSheet = true
+                        openEditExerciseSheet = Exercise()
                     }
                     .keyboardShortcut("N", modifiers: .command)
                 }
             }
             .animation(.default, value: exercises)
-        }
-        .sheet(isPresented: $openCreateExerciseSheet) {
-            EditExercise()
         }
         .sheet(item: $openEditExerciseSheet) { exercise in
             EditExercise(exercise: exercise)

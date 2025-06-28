@@ -15,34 +15,38 @@ struct TrainingsList: View {
 
     @Environment(\.modelContext) var modelContext
     @Environment(ErrorHandler.self) private var errorHandler
-    @State private var openCreateTrainingSheet: Bool = false
+    @State private var openEditTrainingSheet: Training?
 
     var body: some View {
         NavigationStack {
             List(trainings) { training in
-                TrainingCell(training: training)
-                    .swipeActions {
-                        Button.delete {
-                            withAnimation {
-                                errorHandler.try {
-                                    try training.delete()
-                                }
+                Cell {
+                    TrainingCell(training: training)
+                } onTap: {
+                    openEditTrainingSheet = training
+                }
+                .swipeActions {
+                    Button.delete {
+                        withAnimation {
+                            errorHandler.try {
+                                try training.delete()
                             }
                         }
                     }
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button.add {
-                        openCreateTrainingSheet = true
+                        openEditTrainingSheet = Training()
                     }
                     .keyboardShortcut("N", modifiers: .command)
                 }
             }
             .animation(.default, value: trainings)
         }
-        .sheet(isPresented: $openCreateTrainingSheet) {
-            EditTraining()
+        .sheet(item: $openEditTrainingSheet) { training in
+            EditTraining(training: training)
         }
     }
 }
