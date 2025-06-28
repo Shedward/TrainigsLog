@@ -38,7 +38,7 @@ struct TrainingsLogApp: App {
         WindowGroup {
             TabView {
                 Tab("Trainings", systemImage: "checklist.unchecked") {
-                    TrainingsList()
+                    TrainingSessionsList()
                 }
                 Tab("Exercises", systemImage: "figure.strengthtraining.traditional") {
                     ExercisesList()

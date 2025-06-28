@@ -16,7 +16,7 @@ struct TrainingCell: View {
                 .bold()
             Spacer()
             VStack(alignment: .trailing) {
-                Text(training.load.displayValue)
+                Text(training.load.formatted(.full))
                     .bold()
                 Text(training.load.totalLoad.formatted(.number))
                     .font(.caption)

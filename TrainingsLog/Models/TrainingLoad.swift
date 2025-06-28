@@ -12,7 +12,8 @@ import Foundation
 protocol TrainingLoadRepresentable: Codable, Equatable {
     var totalLoad: Double { get }
     var workingLoad: Double { get }
-    var displayValue: String { get }
+
+    func formatted(_ format: TrainingLoadFormatStyle) -> String
 }
 
 enum TrainingLoad: TrainingLoadRepresentable {
@@ -60,20 +61,20 @@ enum TrainingLoad: TrainingLoadRepresentable {
         }
     }
 
-    var displayValue: String {
+    func formatted(_ format: TrainingLoadFormatStyle) -> String {
         switch self {
         case .raw(let value):
-            value.displayValue
+            value.formatted(format)
         case .weights(let value):
-            value.displayValue
+            value.formatted(format)
         case .addingWeights(let value):
-            value.displayValue
+            value.formatted(format)
         case .negativeWeights(let value):
-            value.displayValue
+            value.formatted(format)
         case .distance(let value):
-            value.displayValue
+            value.formatted(format)
         case .repetitions(let value):
-            value.displayValue
+            value.formatted(format)
         }
     }
 
@@ -91,8 +92,15 @@ enum TrainingLoad: TrainingLoadRepresentable {
             value.value
         }
 
-        var displayValue: String {
-            value.formatted()
+        func formatted(_ format: TrainingLoadFormatStyle) -> String {
+            switch format {
+            case .full:
+                value.formatted()
+            case .workingLoad:
+                value.value.formatted()
+            case .multiplier:
+                ""
+            }
         }
     }
 
@@ -111,8 +119,15 @@ enum TrainingLoad: TrainingLoadRepresentable {
             weight.value
         }
 
-        var displayValue: String {
-            String(localized: "\(reps) x \(weight.formatted())")
+        func formatted(_ format: TrainingLoadFormatStyle) -> String {
+            switch format {
+            case .full:
+                String(localized: "\(weight.formatted()) ×\(reps.formatted())")
+            case .workingLoad:
+                weight.value.formatted()
+            case .multiplier:
+                reps.formatted()
+            }
         }
     }
 
@@ -132,8 +147,15 @@ enum TrainingLoad: TrainingLoadRepresentable {
             (bodyWeight - negativeWeight).value
         }
 
-        var displayValue: String {
-            String(localized: "\(reps) x -\(negativeWeight.formatted())")
+        func formatted(_ format: TrainingLoadFormatStyle) -> String {
+            switch format {
+            case .full:
+                String(localized: "-\(negativeWeight.formatted()) ×\(reps)")
+            case .workingLoad:
+                (-negativeWeight.value).formatted()
+            case .multiplier:
+                reps.formatted()
+            }
         }
     }
 
@@ -153,8 +175,15 @@ enum TrainingLoad: TrainingLoadRepresentable {
             (initialWeight + weight).value
         }
 
-        var displayValue: String {
-            String(localized: "\(reps) x +\(weight.formatted())")
+        func formatted(_ format: TrainingLoadFormatStyle) -> String {
+            switch format {
+            case .full:
+                String(localized: "+\(weight.formatted()) ×\(reps)")
+            case .workingLoad:
+                weight.value.formatted()
+            case .multiplier:
+                reps.formatted()
+            }
         }
     }
 
@@ -173,8 +202,15 @@ enum TrainingLoad: TrainingLoadRepresentable {
             distance.value
         }
 
-        var displayValue: String {
-            distance.formatted()
+        func formatted(_ format: TrainingLoadFormatStyle) -> String {
+            switch format {
+            case .full:
+                distance.formatted()
+            case .workingLoad:
+                distance.value.formatted()
+            case .multiplier:
+                loadPerMeter.formatted()
+            }
         }
     }
 
@@ -193,8 +229,15 @@ enum TrainingLoad: TrainingLoadRepresentable {
             Double(count)
         }
 
-        var displayValue: String {
-            count.formatted(.number)
+        func formatted(_ format: TrainingLoadFormatStyle) -> String {
+            switch format {
+            case .full:
+                count.formatted()
+            case .workingLoad:
+                count.formatted()
+            case .multiplier:
+                loadPerRep.formatted()
+            }
         }
     }
 
@@ -259,8 +302,18 @@ enum TrainingLoad: TrainingLoadRepresentable {
     }
 }
 
+enum TrainingLoadFormatStyle: FormatStyle {
+    case full
+    case workingLoad
+    case multiplier
 
-struct WeightValue: Codable, Equatable {
+    func format(_ value: TrainingLoad) -> String {
+        value.formatted(self)
+    }
+}
+
+
+struct WeightValue: Codable, Equatable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
     var value: Double
 
     static let zero = Self(value: 0)
@@ -273,15 +326,39 @@ struct WeightValue: Codable, Equatable {
         .init(value: lhs.value + rhs.value)
     }
 
+    init(value: Double) {
+        self.value = value
+    }
+
+    init(floatLiteral value: FloatLiteralType) {
+        self.value = value
+    }
+
+    init(integerLiteral value: IntegerLiteralType) {
+        self.value = Double(value)
+    }
+
     func formatted(_ formatStyle: WeightValueFormatStyle = .init()) -> String {
         formatStyle.format(self)
     }
 }
 
-struct DistanceValue: Codable, Equatable {
+struct DistanceValue: Codable, Equatable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
     var value: Double
 
     static let zero = Self(value: 0)
+
+    init(value: Double) {
+        self.value = value
+    }
+
+    init(floatLiteral value: FloatLiteralType) {
+        self.value = value
+    }
+
+    init(integerLiteral value: IntegerLiteralType) {
+        self.value = Double(value)
+    }
 
     func formatted(_ formatStyle: DistanceValueFormatStyle = .init()) -> String {
         formatStyle.format(self)
@@ -290,12 +367,12 @@ struct DistanceValue: Codable, Equatable {
 
 struct WeightValueFormatStyle: FormatStyle {
     public func format(_ value: WeightValue) -> String {
-        Measurement(value: value.value, unit: UnitMass.kilograms).formatted(.measurement(width: .abbreviated, usage: .asProvided))
+        String(localized: "\(value.value.formatted()) kg")
     }
 }
 
 struct DistanceValueFormatStyle: FormatStyle {
     public func format(_ value: DistanceValue) -> String {
-        Measurement(value: value.value, unit: UnitLength.meters).formatted(.measurement(width: .abbreviated, usage: .asProvided))
+        String(localized: "\(value.value.formatted()) m")
     }
 }
