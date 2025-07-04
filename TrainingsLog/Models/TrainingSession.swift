@@ -49,7 +49,7 @@ class TrainingSession {
 }
 
 struct GroupedTrainings {
-    let groups: [Group]
+    var groups: [Group]
 
     struct Group: Identifiable {
         var id: PersistentIdentifier? {
@@ -60,7 +60,11 @@ struct GroupedTrainings {
         var trainings: [Training]
     }
 
-    init(groups: [Group]) {
+    var allTrainings: [Training] {
+        groups.flatMap(\.trainings)
+    }
+
+    init(groups: [Group] = []) {
         self.groups = groups
     }
 
@@ -90,5 +94,10 @@ struct GroupedTrainings {
         }
 
         self.groups = groups
+    }
+
+    mutating func newGroup(_ training: Training) {
+        let newGroup = Group(exercise: training.exercise, trainings: [training])
+        groups.append(newGroup)
     }
 }

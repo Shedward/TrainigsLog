@@ -15,8 +15,16 @@ struct EditTrainingSession: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @State private var groupedTrainings: GroupedTrainings {
+        didSet {
+            trainingSession.trainings = groupedTrainings.allTrainings
+        }
+    }
+    @State private var openExerciseSelector: Bool = false
+
     init(trainingSession: TrainingSession) {
         self._trainingSession = .init(trainingSession)
+        self._groupedTrainings = .init(initialValue: .init(grouping: trainingSession.trainings))
     }
 
     var body: some View {
@@ -24,6 +32,15 @@ struct EditTrainingSession: View {
             UniversalForm {
                 DatePicker("Date", selection: $trainingSession.date)
                 TextField("Name", text: $trainingSession.name.unwrappedOr(""))
+
+                Section("Exercises") {
+                    ForEach(groupedTrainings.groups) { group in
+                        TrainingGroupCell(trainingGroup: group)
+                    }
+                    Button.add {
+                        openExerciseSelector = true
+                    }
+                }
 
                 Section("State") {
                     DifficultyPicker($trainingSession.difficulty)
@@ -43,6 +60,12 @@ struct EditTrainingSession: View {
                     }
                     .keyboardShortcut(.defaultAction)
                 }
+            }
+        }
+        .sheet(isPresented: $openExerciseSelector) {
+            ExerciseSelector { addExercise in
+                let training = Training(trainingSession: trainingSession, exercise: addExercise)
+                groupedTrainings.newGroup(training)
             }
         }
     }

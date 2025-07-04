@@ -29,30 +29,34 @@ struct TrainingSessionCell: View {
             }
             .padding(.horizontal)
 
-            Divider()
+            let groups = trainingSession.groupedTrainings.groups
 
-            ScrollView(.horizontal) {
-                Grid(alignment: .leading) {
-                    ForEach(trainingSession.groupedTrainings.groups) { group in
-                        GridRow {
-                            Text(group.exercise?.name ?? String(localized: "-"))
-                                .font(.caption.smallCaps())
+            if !groups.isEmpty {
+                Divider()
 
-                            ForEach(group.trainings) { training in
-                                Text(training.load.formatted(.workingLoad))
-                                    .font(.caption2.bold())
-                                    .gridColumnAlignment(.trailing)
-                                Text(training.load.formatted(.multiplier))
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
+                ScrollView(.horizontal) {
+                    Grid(alignment: .leading) {
+                        ForEach(groups) { group in
+                            GridRow {
+                                Text(group.exercise?.name ?? String(localized: "-"))
+                                    .font(.caption.smallCaps())
+
+                                ForEach(group.trainings) { training in
+                                    Text(training.load.formatted(.workingLoad))
+                                        .font(.caption2.bold())
+                                        .gridColumnAlignment(.trailing)
+                                    Text(training.load.formatted(.multiplier))
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                         }
                     }
+                    .padding(.top, 4)
+                    .padding(.horizontal)
                 }
-                .padding(.top, 4)
-                .padding(.horizontal)
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
         }
         .padding(.vertical)
         .background(.background.secondary)
