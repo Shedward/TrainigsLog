@@ -20,7 +20,7 @@ struct EditTraining: View {
     }
 
     var body: some View {
-        NavigationStack {
+        BottomSheet("Training") {
             UniversalForm {
                 DatePicker("Date", selection: $training.date)
                 ExercisePicker(selection: $training.exercise)
@@ -34,12 +34,6 @@ struct EditTraining: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button.cancel {
-                        dismiss()
-                    }
-                }
-
                 ToolbarItem(placement: .primaryAction) {
                     Button.save {
                         modelContext.insert(training)

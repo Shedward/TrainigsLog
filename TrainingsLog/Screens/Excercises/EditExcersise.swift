@@ -23,7 +23,7 @@ struct EditExercise: View {
     }
 
     var body: some View {
-        NavigationStack {
+        BottomSheet("Exercise") {
             UniversalForm {
                 TextField("Name", text: $exercise.name)
 
@@ -47,12 +47,6 @@ struct EditExercise: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button.cancel {
-                        dismiss()
-                    }
-                }
-
                 ToolbarItem(placement: .primaryAction) {
                     Button.save {
                         errorHandler.try {

@@ -20,18 +20,12 @@ struct EditMuscle: View {
     }
 
     var body: some View {
-        NavigationStack {
+        BottomSheet("Muscle") {
             UniversalForm {
                 TextField("Name", text: $muscle.name)
                 TextField("Category", text: $muscle.category.unwrappedOr(""))
             }
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button.cancel {
-                        dismiss()
-                    }
-                }
-
                 ToolbarItem(placement: .primaryAction) {
                     Button.save {
                         modelContext.insert(muscle)

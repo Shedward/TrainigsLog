@@ -28,7 +28,7 @@ struct EditTrainingSession: View {
     }
 
     var body: some View {
-        NavigationStack {
+        BottomSheet("Training Session") {
             UniversalForm {
                 DatePicker("Date", selection: $trainingSession.date)
                 TextField("Name", text: $trainingSession.name.unwrappedOr(""))
@@ -47,12 +47,6 @@ struct EditTrainingSession: View {
                     TextEditor(text: $trainingSession.comment.unwrappedOr(""))
                 }
             }.toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button.cancel {
-                        dismiss()
-                    }
-                }
-
                 ToolbarItem(placement: .primaryAction) {
                     Button.save {
                         modelContext.insert(trainingSession)
