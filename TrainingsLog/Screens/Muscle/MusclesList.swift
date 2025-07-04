@@ -42,6 +42,7 @@ struct MusclesList: View {
                     .keyboardShortcut("N", modifiers: .command)
                 }
             }
+            .navigationTitle("Muscles")
             .animation(.default, value: muscles)
         }
         .sheet(item: $openEditMuscleSheet) { muscle in

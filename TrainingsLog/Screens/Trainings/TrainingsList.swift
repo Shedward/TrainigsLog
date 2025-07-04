@@ -43,6 +43,7 @@ struct TrainingsList: View {
                     .keyboardShortcut("N", modifiers: .command)
                 }
             }
+            .navigationTitle("Trainings")
             .animation(.default, value: trainings)
         }
         .sheet(item: $openEditTrainingSheet) { training in

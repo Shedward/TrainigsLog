@@ -38,6 +38,14 @@ class TrainingSession {
         self.difficulty = difficulty
         self.comment = comment
     }
+
+    func delete(in modelContext: ModelContext? = nil) throws {
+        guard let modelContext = self.modelContext else {
+            throw AppError("Model сontext not found")
+        }
+
+        modelContext.delete(self)
+    }
 }
 
 struct GroupedTrainings {
