@@ -23,7 +23,7 @@ struct MusclesList: View {
                 Cell {
                     MuscleCell(muscle: muscle)
                 } onTap: {
-
+                    openEditMuscleSheet = muscle
                 }
                 .swipeActions {
                     Button.delete {

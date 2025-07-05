@@ -31,7 +31,7 @@ struct EditTrainingSession: View {
         BottomSheet("Training Session") {
             UniversalForm {
                 DatePicker("Date", selection: $trainingSession.date)
-                TextField("Name", text: $trainingSession.name.unwrappedOr(""))
+                TrainingKindPicker(selection: $trainingSession.kind)
 
                 Section("Exercises") {
                     ForEach(groupedTrainings.groups) { group in

@@ -19,7 +19,8 @@ struct TrainingsLogApp: App {
             Exercise.self,
             MuscleLoad.self,
             Training.self,
-            TrainingSession.self
+            TrainingSession.self,
+            TrainingKind.self
         ])
 
         let url = URL.documentsDirectory.appending(path: "TrainingsLog.sqlite")

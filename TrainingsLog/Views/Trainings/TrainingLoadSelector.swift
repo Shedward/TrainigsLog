@@ -10,14 +10,20 @@ import SwiftUI
 struct TrainingLoadSelector: View {
 
     let onSelect: (TrainingLoad) -> Void
+    let onDelete: (() -> Void)?
 
     @Environment(\.dismiss) var dismiss
 
     @State private var trainingLoad: TrainingLoad
 
-    init(selected: TrainingLoad = .zero, onSelect: @escaping (TrainingLoad) -> Void) {
+    init(
+        selected: TrainingLoad = .zero,
+        onSelect: @escaping (TrainingLoad) -> Void,
+        onDelete: (() -> Void)? = nil
+    ) {
         self._trainingLoad = .init(initialValue: selected)
         self.onSelect = onSelect
+        self.onDelete = onDelete
     }
 
     var body: some View {
@@ -25,10 +31,18 @@ struct TrainingLoadSelector: View {
             UniversalForm {
                 TrainingLoadPicker(trainingLoad: $trainingLoad)
             }.toolbar {
+                if let onDelete {
+                    ToolbarItem(placement: .destructiveAction) {
+                        Button.delete {
+                            onDelete()
+                            dismiss()
+                        }
+                    }
+                }
                 ToolbarItem(placement: .confirmationAction) {
                     Button.save {
-                        dismiss()
                         onSelect(trainingLoad)
+                        dismiss()
                     }
                 }
             }

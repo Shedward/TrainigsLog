@@ -11,7 +11,7 @@ import SwiftData
 @Model
 class TrainingSession {
     var date: Date
-    var name: String?
+    var kind: TrainingKind?
     var trainings: [Training]
     var difficulty: Difficulty
     var comment: String?
@@ -27,13 +27,13 @@ class TrainingSession {
 
     init(
         date: Date = Date(),
-        name: String? = nil,
+        kind: TrainingKind? = nil,
         trainings: [Training] = [],
         difficulty: Difficulty = .normal,
         comment: String? = nil
     ) {
         self.date = date
-        self.name = name
+        self.kind = kind
         self.trainings = trainings
         self.difficulty = difficulty
         self.comment = comment

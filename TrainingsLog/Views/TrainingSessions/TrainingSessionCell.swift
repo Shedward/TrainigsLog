@@ -16,7 +16,7 @@ struct TrainingSessionCell: View {
                 VStack(alignment: .leading) {
                     Text(trainingSession.date.formatted(date: .abbreviated, time: .omitted))
                         .font(.caption.smallCaps())
-                    Text(trainingSession.name ?? String(localized: "-"))
+                    Text(trainingSession.kind?.name ?? String(localized: "-"))
                         .font(.headline)
                 }
                 Spacer()
@@ -59,6 +59,7 @@ struct TrainingSessionCell: View {
             }
         }
         .padding(.vertical)
+        .background(trainingSession.kind?.tint?.color.opacity(0.025) ?? Color.clear)
         .background(.background.secondary)
         .cornerRadius(24)
         .frame(maxWidth: .infinity)
@@ -75,7 +76,7 @@ struct TrainingSessionCell: View {
 
     let trainingSession = TrainingSession(
         date: Date(),
-        name: "Руки / Плечи",
+        kind: TrainingKind(name: "Пречи / Руки", tint: .red),
         trainings: [
             Training(exercise: ex1, load: .weights(.init(weight: 2, reps: 20))),
             Training(exercise: ex1, load: .weights(.init(weight: 6, reps: 12))),

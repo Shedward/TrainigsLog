@@ -24,11 +24,6 @@ struct TrainingGroupCell: View {
                         TagButton(training.load.formatted(.full)) {
                             openTrainingLoadEditor = training
                         }
-                        .contextMenu {
-                            Button.delete(training.load.formatted(.full)) {
-                                onDelete(training)
-                            }
-                        }
                     }
                     TagButton.add {
                         onAddLoad()
@@ -39,6 +34,8 @@ struct TrainingGroupCell: View {
         .sheet(item: $openTrainingLoadEditor) { training in
             TrainingLoadSelector(selected: training.load) { newLoad in
                 training.load = newLoad
+            } onDelete: {
+                onDelete(training)
             }
         }
     }

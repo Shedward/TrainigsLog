@@ -23,6 +23,5 @@ struct MuscleLoadCell: View {
                 .frame(minWidth: 64, alignment: .trailing)
                 .fixedSize()
         }
-        .frame(maxWidth: .infinity)
     }
 }
