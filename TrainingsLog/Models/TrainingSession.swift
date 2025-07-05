@@ -109,6 +109,14 @@ struct GroupedTrainings {
         groups[index].trainings.append(training)
     }
 
+    mutating func deleteTraining(_ training: Training, from group: Group) {
+        guard let index = groups.firstIndex(where: { $0.id == group.id }) else {
+            return
+        }
+
+        groups[index].trainings.removeAll { $0.id == training.id }
+    }
+
     mutating func deleteGroup(_ group: Group) {
         groups.removeAll { $0.id == group.id }
     }

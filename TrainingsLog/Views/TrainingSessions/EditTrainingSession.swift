@@ -21,7 +21,6 @@ struct EditTrainingSession: View {
         }
     }
     @State private var openExerciseSelector = false
-    @State private var openTrainingLoadSelectorForGroup: GroupedTrainings.Group?
 
     init(trainingSession: TrainingSession) {
         self._trainingSession = .init(trainingSession)
@@ -39,7 +38,12 @@ struct EditTrainingSession: View {
                         TrainingGroupCell(
                             trainingGroup: group,
                             onAddLoad: {
-                                openTrainingLoadSelectorForGroup = group
+                                let lastLoad = group.trainings.last?.load ?? .zero
+                                let newTraining = Training(trainingSession: trainingSession, exercise: group.exercise, load: lastLoad)
+                                groupedTrainings.addTraining(newTraining, to: group)
+                            },
+                            onDelete: { deletingTraining in
+                                groupedTrainings.deleteTraining(deletingTraining, from: group)
                             }
                         )
                         .swipeActions {
@@ -71,12 +75,6 @@ struct EditTrainingSession: View {
             ExerciseSelector { addExercise in
                 let training = Training(trainingSession: trainingSession, exercise: addExercise)
                 groupedTrainings.newGroup(training)
-            }
-        }
-        .sheet(item: $openTrainingLoadSelectorForGroup) { group in
-            TrainingLoadSelector { newLoad in
-                let newTraining = Training(trainingSession: trainingSession, exercise: group.exercise, load: newLoad)
-                groupedTrainings.addTraining(newTraining, to: group)
             }
         }
     }

@@ -11,6 +11,7 @@ import SwiftUI
 struct TrainingGroupCell: View {
     let trainingGroup: GroupedTrainings.Group
     let onAddLoad: () -> Void
+    let onDelete: (Training) -> Void
 
     @State private var openTrainingLoadEditor: Training?
 
@@ -22,6 +23,11 @@ struct TrainingGroupCell: View {
                     ForEach(trainingGroup.trainings) { training in
                         TagButton(training.load.formatted(.full)) {
                             openTrainingLoadEditor = training
+                        }
+                        .contextMenu {
+                            Button.delete(training.load.formatted(.full)) {
+                                onDelete(training)
+                            }
                         }
                     }
                     TagButton.add {
