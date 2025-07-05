@@ -14,8 +14,6 @@ struct TrainingsLogApp: App {
     let sharedModelContainer: ModelContainer
 
     init() {
-        TrainingLoadTransformable.register()
-
         let schema = Schema([
             Muscle.self,
             Exercise.self,
