@@ -20,7 +20,8 @@ struct EditTrainingSession: View {
             trainingSession.trainings = groupedTrainings.allTrainings
         }
     }
-    @State private var openExerciseSelector: Bool = false
+    @State private var openExerciseSelector = false
+    @State private var openTrainingLoadSelectorForGroup: GroupedTrainings.Group?
 
     init(trainingSession: TrainingSession) {
         self._trainingSession = .init(trainingSession)
@@ -35,7 +36,17 @@ struct EditTrainingSession: View {
 
                 Section("Exercises") {
                     ForEach(groupedTrainings.groups) { group in
-                        TrainingGroupCell(trainingGroup: group)
+                        TrainingGroupCell(
+                            trainingGroup: group,
+                            onAddLoad: {
+                                openTrainingLoadSelectorForGroup = group
+                            }
+                        )
+                        .swipeActions {
+                            Button.delete {
+                                groupedTrainings.deleteGroup(group)
+                            }
+                        }
                     }
                     Button.add {
                         openExerciseSelector = true
@@ -47,7 +58,7 @@ struct EditTrainingSession: View {
                     TextEditor(text: $trainingSession.comment.unwrappedOr(""))
                 }
             }.toolbar {
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button.save {
                         modelContext.insert(trainingSession)
                         dismiss()
@@ -60,6 +71,12 @@ struct EditTrainingSession: View {
             ExerciseSelector { addExercise in
                 let training = Training(trainingSession: trainingSession, exercise: addExercise)
                 groupedTrainings.newGroup(training)
+            }
+        }
+        .sheet(item: $openTrainingLoadSelectorForGroup) { group in
+            TrainingLoadSelector { newLoad in
+                let newTraining = Training(trainingSession: trainingSession, exercise: group.exercise, load: newLoad)
+                groupedTrainings.addTraining(newTraining, to: group)
             }
         }
     }

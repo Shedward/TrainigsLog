@@ -100,4 +100,16 @@ struct GroupedTrainings {
         let newGroup = Group(exercise: training.exercise, trainings: [training])
         groups.append(newGroup)
     }
+
+    mutating func addTraining(_ training: Training, to group: Group) {
+        guard let index = groups.firstIndex(where: { $0.id == group.id }) else {
+            return
+        }
+
+        groups[index].trainings.append(training)
+    }
+
+    mutating func deleteGroup(_ group: Group) {
+        groups.removeAll { $0.id == group.id }
+    }
 }

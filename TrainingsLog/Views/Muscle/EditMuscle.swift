@@ -26,7 +26,7 @@ struct EditMuscle: View {
                 TextField("Category", text: $muscle.category.unwrappedOr(""))
             }
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button.save {
                         modelContext.insert(muscle)
                         dismiss()

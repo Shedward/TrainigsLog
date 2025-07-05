@@ -29,7 +29,9 @@ struct BottomSheet<Content: View>: View {
                     }
                 }
                 .navigationTitle(title)
+                #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
+                #endif
         }
     }
 }

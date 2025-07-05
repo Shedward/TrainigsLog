@@ -47,7 +47,7 @@ struct EditExercise: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button.save {
                         errorHandler.try {
                             try modelContext.transaction {
