@@ -21,8 +21,8 @@ class TrainingSession {
         return WeightValue(value: value)
     }
 
-    var groupedTrainings: GroupedTrainings {
-        GroupedTrainings(grouping: trainings)
+    var groupedTrainings: TrainingGroups {
+        TrainingGroups(grouping: trainings)
     }
 
     init(
@@ -48,7 +48,7 @@ class TrainingSession {
     }
 }
 
-struct GroupedTrainings {
+struct TrainingGroups {
     var groups: [Group]
 
     struct Group: Identifiable {

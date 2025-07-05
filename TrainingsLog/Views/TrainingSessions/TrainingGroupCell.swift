@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct TrainingGroupCell: View {
-    let trainingGroup: GroupedTrainings.Group
+    let trainingGroup: TrainingGroups.Group
     let onAddLoad: () -> Void
     let onDelete: (Training) -> Void
 

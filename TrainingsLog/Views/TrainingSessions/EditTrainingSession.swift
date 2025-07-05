@@ -15,7 +15,7 @@ struct EditTrainingSession: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
-    @State private var groupedTrainings: GroupedTrainings {
+    @State private var groupedTrainings: TrainingGroups {
         didSet {
             trainingSession.trainings = groupedTrainings.allTrainings
         }
