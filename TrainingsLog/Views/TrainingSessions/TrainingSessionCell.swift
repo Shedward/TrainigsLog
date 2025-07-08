@@ -18,6 +18,12 @@ struct TrainingSessionCell: View {
                         .font(.caption.smallCaps())
                     Text(trainingSession.kind?.name ?? String(localized: "-"))
                         .font(.headline)
+                        .background(alignment: .leadingLastTextBaseline) {
+                            Ellipse()
+                                .frame(height: 6)
+                                .offset(y: 3)
+                                .foregroundStyle(trainingSession.kind?.tint?.color.opacity(0.5) ?? .clear)
+                        }
                 }
                 Spacer()
                 VStack(alignment: .trailing) {
@@ -59,7 +65,6 @@ struct TrainingSessionCell: View {
             }
         }
         .padding(.vertical)
-        .background(trainingSession.kind?.tint?.color.opacity(0.025) ?? Color.clear)
         .background(.background.secondary)
         .cornerRadius(24)
         .frame(maxWidth: .infinity)
