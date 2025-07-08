@@ -21,6 +21,8 @@ struct EditTrainingSession: View {
         }
     }
     @State private var openExerciseSelector = false
+    @State private var openTrainingKindEditor: TrainingKind?
+    @State private var openTrainingLoadEditor: Training?
 
     init(trainingSession: TrainingSession) {
         self._trainingSession = .init(trainingSession)
@@ -31,7 +33,7 @@ struct EditTrainingSession: View {
         BottomSheet("Training Session") {
             UniversalForm {
                 DatePicker("Date", selection: $trainingSession.date)
-                TrainingKindPicker(selection: $trainingSession.kind)
+                TrainingKindPicker(selection: $trainingSession.kind, openEditor: $openTrainingKindEditor)
 
                 Section("Exercises") {
                     ForEach(groupedTrainings.groups) { group in
@@ -44,7 +46,8 @@ struct EditTrainingSession: View {
                             },
                             onDelete: { deletingTraining in
                                 groupedTrainings.deleteTraining(deletingTraining, from: group)
-                            }
+                            },
+                            openTrainingLoadEditor: $openTrainingLoadEditor
                         )
                         .swipeActions {
                             Button.delete {

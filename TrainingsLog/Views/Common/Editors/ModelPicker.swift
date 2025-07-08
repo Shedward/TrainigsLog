@@ -13,6 +13,7 @@ struct ModelPicker<T: PersistentModel, RowContent: View, CreateScreen: View>: Vi
     let name: LocalizedStringKey
     let field: KeyPath<T, String>
     @Binding var selection: T?
+    @Binding var openEditor: T?
     let rowContent: (T) -> RowContent
     let createScreen: () -> CreateScreen
 
@@ -20,12 +21,14 @@ struct ModelPicker<T: PersistentModel, RowContent: View, CreateScreen: View>: Vi
         name: LocalizedStringKey,
         field: KeyPath<T, String>,
         selection: Binding<T?>,
+        openEditor: Binding<T?>,
         @ViewBuilder rowContent: @escaping (T) -> RowContent,
         @ViewBuilder createScreen: @escaping () -> CreateScreen,
     ) {
         self.name = name
         self.field = field
         self._selection = selection
+        self._openEditor = openEditor
         self.rowContent = rowContent
         self.createScreen = createScreen
     }
@@ -88,6 +91,7 @@ extension ModelPicker where CreateScreen == EmptyView {
         self.name = name
         self.field = field
         self._selection = selection
+        self._openEditor = .constant(nil)
         self.rowContent = rowContent
         self.createScreen = { EmptyView() }
     }

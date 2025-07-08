@@ -15,6 +15,8 @@ struct EditTraining: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @State private var openExerciseEditor: Exercise?
+
     init(training: Training = Training()) {
         self._training = .init(training)
     }
@@ -23,7 +25,7 @@ struct EditTraining: View {
         BottomSheet("Training") {
             UniversalForm {
                 DatePicker("Date", selection: $training.date)
-                ExercisePicker(selection: $training.exercise)
+                ExercisePicker(selection: $training.exercise, openEditor: $openExerciseEditor)
                 TrainingLoadPicker(trainingLoad: $training.load)
 
                 Section("State") {

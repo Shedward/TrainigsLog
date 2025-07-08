@@ -13,7 +13,7 @@ struct TrainingGroupCell: View {
     let onAddLoad: () -> Void
     let onDelete: (Training) -> Void
 
-    @State private var openTrainingLoadEditor: Training?
+    @Binding var openTrainingLoadEditor: Training?
 
     var body: some View {
         VStack(alignment: .leading) {
