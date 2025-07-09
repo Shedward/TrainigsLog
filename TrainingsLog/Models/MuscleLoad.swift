@@ -5,9 +5,11 @@
 //  Created by Vlad Maltsev on 23.06.2025.
 //
 
+import TrainingsLogMacro
 import SwiftData
 
 @Model
+@ModelData
 class MuscleLoad {
     var muscle: Muscle?
     var exercise: Exercise?

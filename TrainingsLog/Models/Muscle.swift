@@ -5,10 +5,12 @@
 //  Created by Vlad Maltsev on 17.06.2025.
 //
 
+import TrainingsLogMacro
 import SwiftUI
 import SwiftData
 
 @Model
+@ModelData
 class Muscle {
     @Attribute(.unique) var name: String
     var category: String?

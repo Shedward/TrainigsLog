@@ -5,10 +5,12 @@
 //  Created by Vlad Maltsev on 20.06.2025.
 //
 
+import TrainingsLogMacro
 import SwiftUI
 import SwiftData
 
 @Model
+@ModelData
 class Exercise {
     @Attribute(.unique) var name: String
     @Relationship(deleteRule: .cascade, inverse: \MuscleLoad.exercise) var muscleLoads: [MuscleLoad]

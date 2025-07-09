@@ -5,10 +5,12 @@
 //  Created by Vlad Maltsev on 26.06.2025.
 //
 
+import TrainingsLogMacro
 import SwiftData
 import Foundation
 
 @Model
+@ModelData
 class Training {
     var date: Date
     var trainingSession: TrainingSession?
