@@ -10,33 +10,32 @@ import SwiftData
 
 struct EditExercise: View {
 
-    @Bindable private var exercise: Exercise
+    private let exerciseModel: Exercise
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(ErrorHandler.self) private var errorHandler
 
+    @State private var exerciseData: Exercise.Data
     @State private var openAddMuscleLoad: Bool = false
 
-    init(exercise: Exercise = .init(name: "")) {
-        self._exercise = .init(exercise)
+    init(exercise: Exercise = .default) {
+        self.exerciseModel = exercise
+        self._exerciseData = .init(initialValue: exercise.data())
     }
 
     var body: some View {
         BottomSheet("Exercise") {
             UniversalForm {
-                TextField("Name", text: $exercise.name)
+                TextField("Name", text: $exerciseData.name)
 
                 Section("Muscles") {
-                    ForEach(exercise.muscleLoads) { muscleLoad in
+                    ForEach(exerciseData.muscleLoads) { muscleLoad in
                         MuscleLoadCell(muscleLoad: muscleLoad)
                             .swipeActions {
                                 Button.delete {
                                     withAnimation {
-                                        errorHandler.try {
-                                            modelContext.delete(muscleLoad)
-                                            exercise.muscleLoads.removeAll { $0.id == muscleLoad.id }
-                                        }
+                                        exerciseData.muscleLoads.removeAll { $0.id == muscleLoad.id }
                                     }
                                 }
                             }
@@ -51,21 +50,22 @@ struct EditExercise: View {
                     Button.save {
                         errorHandler.try {
                             try modelContext.transaction {
-                                modelContext.insert(exercise)
-                                exercise.muscleLoads.forEach { modelContext.insert($0) }
+                                exerciseModel.save(data: exerciseData)
+                                modelContext.insert(exerciseModel)
+                                exerciseModel.muscleLoads.forEach { modelContext.insert($0) }
                             }
                             dismiss()
                         }
                     }
                     .keyboardShortcut(.defaultAction)
-                    .disabled(exercise.name.isEmpty)
+                    .disabled(exerciseData.name.isEmpty)
                 }
             }
         }
         .sheet(isPresented: $openAddMuscleLoad) {
             MuscleSelector { newMuscle in
-                let load = MuscleLoad(muscle: newMuscle, exercise: exercise)
-                exercise.muscleLoads.append(load)
+                let load = MuscleLoad(muscle: newMuscle, exercise: exerciseModel)
+                exerciseData.muscleLoads.append(load)
             }
         }
         .presentationDetents([.medium, .large])

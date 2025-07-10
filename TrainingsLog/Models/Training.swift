@@ -10,8 +10,8 @@ import SwiftData
 import Foundation
 
 @Model
-@ModelData
-class Training {
+@Dataable
+final class Training {
     var date: Date
     var trainingSession: TrainingSession?
     var exercise: Exercise?
@@ -41,5 +41,11 @@ class Training {
         }
 
         modelContext.delete(self)
+    }
+}
+
+extension Training: Defaultable {
+    static var `default`: Self {
+        .init()
     }
 }

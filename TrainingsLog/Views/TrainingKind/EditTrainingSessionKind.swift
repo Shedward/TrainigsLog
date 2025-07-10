@@ -10,29 +10,33 @@ import SwiftData
 
 struct EditTrainingKind: View {
 
-    @Bindable var kind: TrainingKind
+    private let kindModel: TrainingKind
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @State private var kindData: TrainingKind.Data
+
     init(kind: TrainingKind = .init()) {
-        self._kind = .init(wrappedValue: kind)
+        self.kindModel = kind
+        self._kindData = .init(initialValue: kind.data())
     }
 
     var body: some View {
         BottomSheet("Training Session Kind") {
             UniversalForm {
-                TextField("Name", text: $kind.name)
-                TintPicker(selected: $kind.tint.unwrappedOr(.none))
+                TextField("Name", text: $kindData.name)
+                TintPicker(selected: $kindData.tint.unwrappedOr(.none))
             }
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button.save {
-                        modelContext.insert(kind)
+                        kindModel.save(data: kindData)
+                        modelContext.insert(kindModel)
                         dismiss()
                     }
                     .keyboardShortcut(.defaultAction)
-                    .disabled(kind.name.isEmpty)
+                    .disabled(kindData.name.isEmpty)
                 }
             }
         }

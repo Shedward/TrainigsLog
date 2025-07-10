@@ -81,3 +81,9 @@ struct TrainingGroups {
         groups.removeAll { $0.id == group.id }
     }
 }
+
+extension TrainingGroups {
+    static var `default`: Self {
+        .init()
+    }
+}

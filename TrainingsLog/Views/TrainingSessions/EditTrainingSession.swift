@@ -10,14 +10,15 @@ import SwiftData
 
 struct EditTrainingSession: View {
 
-    @Bindable var trainingSession: TrainingSession
+    private let trainingSessionModel: TrainingSession
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @State private var trainingSessionData: TrainingSession.Data
     @State private var groupedTrainings: TrainingGroups {
         didSet {
-            trainingSession.trainings = groupedTrainings.allTrainings
+            trainingSessionData.trainings = groupedTrainings.allTrainings
         }
     }
     @State private var openExerciseSelector = false
@@ -25,15 +26,16 @@ struct EditTrainingSession: View {
     @State private var openTrainingLoadEditor: Training?
 
     init(trainingSession: TrainingSession) {
-        self._trainingSession = .init(trainingSession)
+        self.trainingSessionModel = trainingSession
+        self._trainingSessionData = .init(initialValue: trainingSession.data())
         self._groupedTrainings = .init(initialValue: .init(grouping: trainingSession.trainings))
     }
 
     var body: some View {
         BottomSheet("Training Session") {
             UniversalForm {
-                DatePicker("Date", selection: $trainingSession.date)
-                TrainingKindPicker(selection: $trainingSession.kind, openEditor: $openTrainingKindEditor)
+                DatePicker("Date", selection: $trainingSessionData.date)
+                TrainingKindPicker(selection: $trainingSessionData.kind, openEditor: $openTrainingKindEditor)
 
                 Section("Exercises") {
                     ForEach(groupedTrainings.groups) { group in
@@ -41,7 +43,7 @@ struct EditTrainingSession: View {
                             trainingGroup: group,
                             onAddLoad: {
                                 let lastLoad = group.trainings.last?.load ?? .zero
-                                let newTraining = Training(trainingSession: trainingSession, exercise: group.exercise, load: lastLoad)
+                                let newTraining = Training(trainingSession: trainingSessionModel, exercise: group.exercise, load: lastLoad)
                                 groupedTrainings.addTraining(newTraining, to: group)
                             },
                             onDelete: { deletingTraining in
@@ -61,13 +63,14 @@ struct EditTrainingSession: View {
                 }
 
                 Section("State") {
-                    DifficultyPicker($trainingSession.difficulty)
-                    TextEditor(text: $trainingSession.comment.unwrappedOr(""))
+                    DifficultyPicker($trainingSessionData.difficulty)
+                    TextEditor(text: $trainingSessionData.comment.unwrappedOr(""))
                 }
             }.toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button.save {
-                        modelContext.insert(trainingSession)
+                        trainingSessionModel.save(data: trainingSessionData)
+                        modelContext.insert(trainingSessionModel)
                         dismiss()
                     }
                     .keyboardShortcut(.defaultAction)
@@ -76,7 +79,7 @@ struct EditTrainingSession: View {
         }
         .sheet(isPresented: $openExerciseSelector) {
             ExerciseSelector { addExercise in
-                let training = Training(trainingSession: trainingSession, exercise: addExercise)
+                let training = Training(trainingSession: trainingSessionModel, exercise: addExercise)
                 groupedTrainings.newGroup(training)
             }
         }

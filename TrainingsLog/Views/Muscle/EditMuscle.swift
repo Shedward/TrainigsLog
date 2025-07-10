@@ -10,29 +10,33 @@ import SwiftData
 
 struct EditMuscle: View {
 
-    @Bindable var muscle: Muscle
+    private let muscleModel: Muscle
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
-    init(muscle: Muscle = Muscle(name: "")) {
-        self._muscle = .init(muscle)
+    @State private var muscleData: Muscle.Data
+
+    init(muscle: Muscle = .default) {
+        self.muscleModel = muscle
+        self._muscleData = .init(initialValue: muscle.data())
     }
 
     var body: some View {
         BottomSheet("Muscle") {
             UniversalForm {
-                TextField("Name", text: $muscle.name)
-                TextField("Category", text: $muscle.category.unwrappedOr(""))
+                TextField("Name", text: $muscleData.name)
+                TextField("Category", text: $muscleData.category.unwrappedOr(""))
             }
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button.save {
-                        modelContext.insert(muscle)
+                        muscleModel.save(data: muscleData)
+                        modelContext.insert(muscleModel)
                         dismiss()
                     }
                     .keyboardShortcut(.defaultAction)
-                    .disabled(muscle.name.isEmpty)
+                    .disabled(muscleData.name.isEmpty)
                 }
             }
         }

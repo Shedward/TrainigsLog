@@ -10,8 +10,8 @@ import SwiftUI
 import SwiftData
 
 @Model
-@ModelData
-class Muscle {
+@Dataable
+final class Muscle {
     @Attribute(.unique) var name: String
     var category: String?
     @Relationship(deleteRule: .cascade, inverse: \MuscleLoad.muscle) var muscleLoads: [MuscleLoad]
@@ -33,5 +33,11 @@ class Muscle {
             }
             modelContext.delete(self)
         }
+    }
+}
+
+extension Muscle: Defaultable {
+    static var `default`: Self {
+        .init()
     }
 }

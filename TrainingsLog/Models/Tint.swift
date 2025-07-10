@@ -17,7 +17,6 @@ enum Tint: CaseIterable, Codable {
     case indigo
     case purple
 
-
     var color: Color {
         switch self {
             case .none: .black
@@ -29,5 +28,11 @@ enum Tint: CaseIterable, Codable {
             case .indigo: .indigo
             case .purple: .purple
         }
+    }
+}
+
+extension Tint: Defaultable {
+    static var `default`: Self {
+        .none
     }
 }

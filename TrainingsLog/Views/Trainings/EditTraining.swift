@@ -10,35 +10,38 @@ import SwiftUI
 
 struct EditTraining: View {
 
-    @Bindable var training: Training
+    private let trainingModel: Training
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @State private var trainingData: Training.Data
     @State private var openExerciseEditor: Exercise?
 
     init(training: Training = Training()) {
-        self._training = .init(training)
+        self.trainingModel = training
+        self._trainingData = .init(initialValue: training.data())
     }
 
     var body: some View {
         BottomSheet("Training") {
             UniversalForm {
-                DatePicker("Date", selection: $training.date)
-                ExercisePicker(selection: $training.exercise, openEditor: $openExerciseEditor)
-                TrainingLoadPicker(trainingLoad: $training.load)
+                DatePicker("Date", selection: $trainingData.date)
+                ExercisePicker(selection: $trainingData.exercise, openEditor: $openExerciseEditor)
+                TrainingLoadPicker(trainingLoad: $trainingData.load)
 
                 Section("State") {
-                    DifficultyPicker($training.difficulty)
+                    DifficultyPicker($trainingData.difficulty)
                     LabeledContent("Comment") {
-                        TextEditor(text: $training.comment.unwrappedOr(""))
+                        TextEditor(text: $trainingData.comment.unwrappedOr(""))
                     }
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button.save {
-                        modelContext.insert(training)
+                        trainingModel.save(data: trainingData)
+                        modelContext.insert(trainingModel)
                         dismiss()
                     }
                 }

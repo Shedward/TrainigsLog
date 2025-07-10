@@ -9,15 +9,21 @@ import TrainingsLogMacro
 import SwiftData
 
 @Model
-@ModelData
-class MuscleLoad {
+@Dataable
+final class MuscleLoad {
     var muscle: Muscle?
     var exercise: Exercise?
     var loadFraction: Double
 
-    init(muscle: Muscle, exercise: Exercise, loadFraction: Double = 1.0) {
+    init(muscle: Muscle = .default, exercise: Exercise = .default, loadFraction: Double = 1.0) {
         self.muscle = muscle
         self.exercise = exercise
         self.loadFraction = loadFraction
+    }
+}
+
+extension MuscleLoad: Defaultable {
+    static var `default`: Self {
+        .init()
     }
 }

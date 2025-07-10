@@ -376,3 +376,9 @@ struct DistanceValueFormatStyle: FormatStyle {
         String(localized: "\(value.value.formatted()) m")
     }
 }
+
+extension TrainingLoad: Defaultable {
+    static var `default`: Self {
+        .raw(.zero)
+    }
+}

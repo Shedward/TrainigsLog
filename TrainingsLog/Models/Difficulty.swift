@@ -48,3 +48,9 @@ struct Difficulty: Codable, RawRepresentable, CaseIterable, Hashable {
         try container.encode(rawValue)
     }
 }
+
+extension Difficulty: Defaultable {
+    static var `default`: Self {
+        .normal
+    }
+}
