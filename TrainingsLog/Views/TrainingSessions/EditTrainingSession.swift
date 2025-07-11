@@ -16,11 +16,6 @@ struct EditTrainingSession: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var trainingSessionData: TrainingSession.Data
-    @State private var groupedTrainings: TrainingGroups {
-        didSet {
-            trainingSessionData.trainings = groupedTrainings.allTrainings
-        }
-    }
     @State private var openExerciseSelector = false
     @State private var openTrainingKindEditor: TrainingKind?
     @State private var openTrainingLoadEditor: Training?
@@ -28,7 +23,6 @@ struct EditTrainingSession: View {
     init(trainingSession: TrainingSession) {
         self.trainingSessionModel = trainingSession
         self._trainingSessionData = .init(initialValue: trainingSession.data())
-        self._groupedTrainings = .init(initialValue: .init(grouping: trainingSession.trainings))
     }
 
     var body: some View {
@@ -38,22 +32,26 @@ struct EditTrainingSession: View {
                 TrainingKindPicker(selection: $trainingSessionData.kind, openEditor: $openTrainingKindEditor)
 
                 Section("Exercises") {
-                    ForEach(groupedTrainings.groups) { group in
+                    ForEach(trainingSessionData.trainingGroups.groups) { group in
                         TrainingGroupCell(
                             trainingGroup: group,
                             onAddLoad: {
                                 let lastLoad = group.trainings.last?.load ?? .zero
-                                let newTraining = Training(trainingSession: trainingSessionModel, exercise: group.exercise, load: lastLoad)
-                                groupedTrainings.addTraining(newTraining, to: group)
+                                let newTraining = Training(
+                                    trainingSession: trainingSessionModel,
+                                    exercise: group.exercise,
+                                    load: lastLoad
+                                )
+                                trainingSessionData.trainingGroups.addTraining(newTraining, to: group)
                             },
                             onDelete: { deletingTraining in
-                                groupedTrainings.deleteTraining(deletingTraining, from: group)
+                                trainingSessionData.trainingGroups.deleteTraining(deletingTraining, from: group)
                             },
                             openTrainingLoadEditor: $openTrainingLoadEditor
                         )
                         .swipeActions {
                             Button.delete {
-                                groupedTrainings.deleteGroup(group)
+                                trainingSessionData.trainingGroups.deleteGroup(group)
                             }
                         }
                     }
@@ -79,8 +77,8 @@ struct EditTrainingSession: View {
         }
         .sheet(isPresented: $openExerciseSelector) {
             ExerciseSelector { addExercise in
-                let training = Training(trainingSession: trainingSessionModel, exercise: addExercise)
-                groupedTrainings.newGroup(training)
+                let training = Training(exercise: addExercise)
+                trainingSessionData.trainingGroups.newGroup(training)
             }
         }
     }

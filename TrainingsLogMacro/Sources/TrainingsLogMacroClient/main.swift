@@ -1,6 +1,6 @@
 import TrainingsLogMacro
 
-@ModelData
+@Dataable
 class TestClass {
     let id = 1
     var text: String = ""

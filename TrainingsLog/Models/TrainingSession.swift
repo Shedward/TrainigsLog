@@ -10,7 +10,6 @@ import Foundation
 import SwiftData
 
 @Model
-@Dataable
 final class TrainingSession {
     var date: Date
     var kind: TrainingKind?
@@ -47,6 +46,44 @@ final class TrainingSession {
         }
 
         modelContext.delete(self)
+    }
+}
+
+extension TrainingSession: Dataable {
+    struct Data {
+        var date: Date
+        var kind: TrainingKind?
+        var trainingGroups: TrainingGroups
+        var difficulty: Difficulty
+        var comment: String?
+    }
+
+    func data() -> Data {
+        Data(
+            date: date,
+            kind: kind,
+            trainingGroups: TrainingGroups(
+                grouping: trainings.sorted(using: SortDescriptor(\.orderInSession, order: .forward))
+            ),
+            difficulty: difficulty,
+            comment: comment
+        )
+    }
+
+    func save(data: Data) {
+        self.date = data.date
+        self.kind = data.kind
+        self.trainings = data.trainingGroups.groups
+            .flatMap(\.trainings)
+            .enumerated()
+            .map { index, training in
+                training.trainingSession = self
+                training.orderInSession = index
+                training.startDate = training.startDate ?? date
+                return training
+            }
+        self.difficulty = data.difficulty
+        self.comment = data.comment
     }
 }
 

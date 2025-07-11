@@ -7,8 +7,10 @@
 
 import Foundation
 import SwiftData
+import Observation
 
-struct TrainingGroups {
+@Observable
+final class TrainingGroups {
     var groups: [Group]
 
     struct Group: Identifiable {
@@ -18,10 +20,6 @@ struct TrainingGroups {
 
         var exercise: Exercise?
         var trainings: [Training]
-    }
-
-    var allTrainings: [Training] {
-        groups.flatMap(\.trainings)
     }
 
     init(groups: [Group] = []) {
@@ -56,12 +54,12 @@ struct TrainingGroups {
         self.groups = groups
     }
 
-    mutating func newGroup(_ training: Training) {
+    func newGroup(_ training: Training) {
         let newGroup = Group(exercise: training.exercise, trainings: [training])
         groups.append(newGroup)
     }
 
-    mutating func addTraining(_ training: Training, to group: Group) {
+    func addTraining(_ training: Training, to group: Group) {
         guard let index = groups.firstIndex(where: { $0.id == group.id }) else {
             return
         }
@@ -69,7 +67,7 @@ struct TrainingGroups {
         groups[index].trainings.append(training)
     }
 
-    mutating func deleteTraining(_ training: Training, from group: Group) {
+    func deleteTraining(_ training: Training, from group: Group) {
         guard let index = groups.firstIndex(where: { $0.id == group.id }) else {
             return
         }
@@ -77,7 +75,7 @@ struct TrainingGroups {
         groups[index].trainings.removeAll { $0.id == training.id }
     }
 
-    mutating func deleteGroup(_ group: Group) {
+    func deleteGroup(_ group: Group) {
         groups.removeAll { $0.id == group.id }
     }
 }

@@ -67,6 +67,7 @@ struct TrainingSessionCell: View {
         .padding(.vertical)
         .background(.background.secondary)
         .cornerRadius(24)
+        .padding(.vertical, 4)
         .frame(maxWidth: .infinity)
     }
 }

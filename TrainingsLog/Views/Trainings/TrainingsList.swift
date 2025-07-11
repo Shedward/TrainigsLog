@@ -10,7 +10,7 @@ import SwiftData
 
 struct TrainingsList: View {
 
-    @Query(sort: \Training.date, animation: .default)
+    @Query(sort: \Training.startDate, animation: .default)
     var trainings: [Training] = []
 
     @Environment(\.modelContext) var modelContext

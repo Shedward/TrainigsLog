@@ -5,7 +5,9 @@
 //  Created by Vlad Maltsev on 20.06.2025.
 //
 
+import TrainingsLogMacro
 import SwiftUI
+import OSLog
 
 extension Binding {
     func unwrappedOr<T>(_ defaultValue: T) -> Binding<T> where Value == T? {

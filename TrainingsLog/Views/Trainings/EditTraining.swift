@@ -26,7 +26,7 @@ struct EditTraining: View {
     var body: some View {
         BottomSheet("Training") {
             UniversalForm {
-                DatePicker("Date", selection: $trainingData.date)
+                DatePicker("Date", selection: $trainingData.startDate.unwrappedOr(Date()))
                 ExercisePicker(selection: $trainingData.exercise, openEditor: $openExerciseEditor)
                 TrainingLoadPicker(trainingLoad: $trainingData.load)
 

@@ -12,7 +12,9 @@ import Foundation
 @Model
 @Dataable
 final class Training {
-    var date: Date
+    var orderInSession: Int
+    var startDate: Date?
+    var duration: TimeInterval
     var trainingSession: TrainingSession?
     var exercise: Exercise?
     var load: TrainingLoad
@@ -20,14 +22,18 @@ final class Training {
     var comment: String?
 
     init(
-        date: Date = Date(),
+        orderInSession: Int = 0,
+        startDate: Date? = nil,
+        duration: TimeInterval = 0,
         trainingSession: TrainingSession? = nil,
         exercise: Exercise? = nil,
         load: TrainingLoad = .zero,
         difficulty: Difficulty = .normal,
         comment: String? = nil
     ) {
-        self.date = date
+        self.orderInSession = orderInSession
+        self.startDate = startDate
+        self.duration = duration
         self.trainingSession = trainingSession
         self.exercise = exercise
         self.load = load
