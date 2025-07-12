@@ -35,23 +35,23 @@ struct TrainingSessionCell: View {
             }
             .padding(.horizontal)
 
-            let groups = trainingSession.groupedTrainings.groups
+            let exercises = trainingSession.data().exercises
 
-            if !groups.isEmpty {
+            if !exercises.isEmpty {
                 Divider()
 
                 ScrollView(.horizontal) {
                     Grid(alignment: .leading) {
-                        ForEach(groups) { group in
+                        ForEach(exercises.blocks) { block in
                             GridRow {
-                                Text(group.exercise?.name ?? String(localized: "-"))
+                                Text(block.exercise?.name ?? String(localized: "-"))
                                     .font(.caption.smallCaps())
 
-                                ForEach(group.trainings) { training in
-                                    Text(training.load.formatted(.workingLoad))
+                                ForEach(block.sets) { set in
+                                    Text(set.load.formatted(.workingLoad))
                                         .font(.caption2.bold())
                                         .gridColumnAlignment(.trailing)
-                                    Text(training.load.formatted(.multiplier))
+                                    Text(set.load.formatted(.multiplier))
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                 }

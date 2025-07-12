@@ -10,77 +10,110 @@ import SwiftData
 import Observation
 
 @Observable
-final class TrainingGroups {
-    var groups: [Group]
+final class TrainingSessionExercises {
 
-    struct Group: Identifiable {
-        var id: PersistentIdentifier? {
-            trainings.first?.id
+    @Observable
+    final class ExerciseBlock: Identifiable {
+        let id: PersistentIdentifier
+        var sets: [ExerciseSet]
+
+        var exercise: Exercise? {
+            sets.first?.training.exercise
         }
 
-        var exercise: Exercise?
-        var trainings: [Training]
+        init(firstTraining: Training) {
+            self.id = firstTraining.id
+            self.sets = [.init(training: firstTraining)]
+        }
+
+        func repeatSet() {
+            let lastLoad = sets.last?.load ?? .zero
+            let training = Training(exercise: exercise, load: lastLoad)
+            sets.append(.init(training: training))
+        }
+
+        func delete(training: Training) {
+            sets.removeAll { $0.training.id == training.id }
+        }
+
+        func delete(set: ExerciseSet) {
+            sets.removeAll { $0.id == set.id }
+        }
     }
 
-    init(groups: [Group] = []) {
-        self.groups = groups
+    @Observable
+    final class ExerciseSet: Identifiable {
+        let id: PersistentIdentifier
+        let training: Training
+
+        var load: TrainingLoad
+
+        init(training: Training) {
+            self.id = training.id
+            self.training = training
+            self.load = training.load
+        }
+    }
+
+
+    private(set) var blocks: [ExerciseBlock]
+
+    var isEmpty: Bool {
+        blocks.isEmpty
+    }
+
+    init(blocks: [ExerciseBlock] = []) {
+        self.blocks = blocks
     }
 
     init(grouping trainings: [Training]) {
-        var groups: [Group] = []
-        var currentGroup: Group?
+        var blocks: [ExerciseBlock] = []
+        var currentBlock: ExerciseBlock?
 
         for training in trainings {
-            let exercise = training.exercise
-
-            if let group = currentGroup {
-                if group.exercise?.id == exercise?.id, exercise != nil {
-                    currentGroup?.trainings.append(training)
+            if let block = currentBlock {
+                if block.exercise == training.exercise {
+                    block.sets.append(.init(training: training))
                 } else {
-                    if let committedGroup = currentGroup {
-                        groups.append(committedGroup)
-                    }
-                    currentGroup = Group(exercise: exercise, trainings: [training])
+                    blocks.append(block)
+                    currentBlock = .init(firstTraining: training)
                 }
             } else {
-                currentGroup = Group(exercise: exercise, trainings: [training])
+                currentBlock = .init(firstTraining: training)
             }
         }
 
-        if let committedGroup = currentGroup {
-            groups.append(committedGroup)
+        if let currentBlock {
+            blocks.append(currentBlock)
         }
-
-        self.groups = groups
+        
+        self.blocks = blocks
     }
 
-    func newGroup(_ training: Training) {
-        let newGroup = Group(exercise: training.exercise, trainings: [training])
-        groups.append(newGroup)
+    func appendNewBlock(exercise: Exercise) {
+        let training = Training(exercise: exercise)
+        blocks.append(.init(firstTraining: training))
     }
 
-    func addTraining(_ training: Training, to group: Group) {
-        guard let index = groups.firstIndex(where: { $0.id == group.id }) else {
-            return
+    func delete(block: ExerciseBlock) {
+        blocks.removeAll { block.id == $0.id }
+    }
+
+    func delete(training: Training) {
+        blocks.forEach { block in
+            block.delete(training: training)
         }
-
-        groups[index].trainings.append(training)
     }
 
-    func deleteTraining(_ training: Training, from group: Group) {
-        guard let index = groups.firstIndex(where: { $0.id == group.id }) else {
-            return
+    func delete(set: ExerciseSet) {
+        blocks.forEach { block in
+            block.delete(set: set)
         }
-
-        groups[index].trainings.removeAll { $0.id == training.id }
     }
 
-    func deleteGroup(_ group: Group) {
-        groups.removeAll { $0.id == group.id }
-    }
 }
 
-extension TrainingGroups {
+extension TrainingSessionExercises {
     static var `default`: Self {
         .init()
     }

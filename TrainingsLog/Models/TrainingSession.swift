@@ -22,10 +22,6 @@ final class TrainingSession {
         return WeightValue(value: value)
     }
 
-    var groupedTrainings: TrainingGroups {
-        TrainingGroups(grouping: trainings)
-    }
-
     init(
         date: Date = Date(),
         kind: TrainingKind? = nil,
@@ -53,7 +49,7 @@ extension TrainingSession: Dataable {
     struct Data {
         var date: Date
         var kind: TrainingKind?
-        var trainingGroups: TrainingGroups
+        var exercises: TrainingSessionExercises
         var difficulty: Difficulty
         var comment: String?
     }
@@ -62,7 +58,7 @@ extension TrainingSession: Dataable {
         Data(
             date: date,
             kind: kind,
-            trainingGroups: TrainingGroups(
+            exercises: TrainingSessionExercises(
                 grouping: trainings.sorted(using: SortDescriptor(\.orderInSession, order: .forward))
             ),
             difficulty: difficulty,
@@ -73,10 +69,11 @@ extension TrainingSession: Dataable {
     func save(data: Data) {
         self.date = data.date
         self.kind = data.kind
-        self.trainings = data.trainingGroups.groups
-            .flatMap(\.trainings)
+        self.trainings = data.exercises.blocks
+            .flatMap(\.sets)
             .enumerated()
-            .map { index, training in
+            .map { index, set in
+                let training = set.training
                 training.trainingSession = self
                 training.orderInSession = index
                 training.startDate = training.startDate ?? date
