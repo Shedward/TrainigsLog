@@ -76,6 +76,7 @@ extension TrainingSession: Dataable {
                 let training = set.training
                 training.trainingSession = self
                 training.orderInSession = index
+                training.load = set.load
                 training.startDate = training.startDate ?? date
                 return training
             }
