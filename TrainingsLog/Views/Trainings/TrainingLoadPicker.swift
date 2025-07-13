@@ -14,7 +14,7 @@ struct TrainingLoadPicker: View {
 
     init(trainingLoad: Binding<TrainingLoad>) {
         self._trainingLoad = trainingLoad
-        selectedKind = TrainingLoad.Kind(trainingLoad.wrappedValue)
+        self._selectedKind = .init(initialValue: TrainingLoad.Kind(trainingLoad.wrappedValue))
     }
 
     var body: some View {
