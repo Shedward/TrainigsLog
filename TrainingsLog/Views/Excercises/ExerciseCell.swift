@@ -10,21 +10,36 @@ import SwiftUI
 struct ExerciseCell: View {
     let exercise: Exercise
 
+    @Environment(\.modelContext) var modelContext
+    @Environment(ErrorHandler.self) var errorHandler
+
     @State private var musclesDescription: String?
+    @State private var loadStats: ExerciseLoadStats?
 
     init(exercise: Exercise) {
         self.exercise = exercise
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(exercise.name)
-                .font(.body.bold())
+        HStack {
+            VStack(alignment: .leading) {
+                Text(exercise.name)
+                    .font(.body.bold())
 
-            if let musclesDescription {
-                Text(musclesDescription)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                if let musclesDescription {
+                    Text(musclesDescription)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+            Spacer()
+            if let loadStats {
+                VStack(alignment: .trailing) {
+                    Text(loadStats.workingLoad.formatted(.full))
+                        .font(.body.monospacedDigit().bold())
+                    Text(loadStats.lastLoad.formatted(.full))
+                        .font(.body.monospacedDigit())
+                }
             }
         }
         .frame(minHeight: 32)
@@ -32,9 +47,11 @@ struct ExerciseCell: View {
         .padding(.vertical, 4)
         .onAppear {
             updateMusclesDescription()
+            updateExerciseLoadStats()
         }
         .onChange(of: exercise) { _, _ in
             updateMusclesDescription()
+            updateExerciseLoadStats()
         }
     }
 
@@ -43,5 +60,13 @@ struct ExerciseCell: View {
             .sorted(using: SortDescriptor(\.loadFraction, order: .forward))
             .compactMap(\.muscle?.name)
             .joined(separator: ", ")
+    }
+
+    private func updateExerciseLoadStats() {
+        errorHandler.try {
+            let stats = try ExerciseLoadStatsService(modelContext: modelContext)
+                .workingLoadStats(for: exercise)
+            loadStats = stats
+        }
     }
 }
