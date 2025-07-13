@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct EditMuscle: View {
-
     private let muscleModel: Muscle
 
     @Environment(\.modelContext) private var modelContext

@@ -13,14 +13,14 @@ struct TrainingKindCell: View {
     var body: some View {
         HStack {
             Text(kind.name)
-            if let tint = kind.tint {
+            if let tint = kind.glyph {
                 Spacer()
-                TintCell(tint: tint)
+                GlyphImage(glyph: tint)
             }
         }
     }
 }
 
 #Preview {
-    TrainingKindCell(kind: TrainingKind(name: "Name", tint: .red))
+    TrainingKindCell(kind: TrainingKind(name: "Name", glyph: .default))
 }

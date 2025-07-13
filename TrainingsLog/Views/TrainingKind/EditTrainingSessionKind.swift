@@ -16,6 +16,7 @@ struct EditTrainingKind: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var kindData: TrainingKind.Data
+    @State private var openKindEditor: Bool = false
 
     init(kind: TrainingKind = .init()) {
         self.kindModel = kind
@@ -26,7 +27,7 @@ struct EditTrainingKind: View {
         BottomSheet("Training Session Kind") {
             UniversalForm {
                 TextField("Name", text: $kindData.name)
-                TintPicker(selected: $kindData.tint.unwrappedOr(.none))
+                GlyphPicker(selection: $kindData.glyph, openEditor: $openKindEditor)
             }
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -45,5 +46,5 @@ struct EditTrainingKind: View {
 }
 
 #Preview {
-    EditTrainingKind(kind: TrainingKind(name: "Hello", tint: .red))
+    EditTrainingKind(kind: TrainingKind(name: "Hello", glyph: .default))
 }

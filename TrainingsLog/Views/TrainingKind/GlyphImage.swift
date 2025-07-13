@@ -10,8 +10,8 @@ import SwiftUI
 struct GlyphImage: View {
     let glyph: Glyph
 
-    var size: CGFloat = 64
-    var cornerRadius: CGFloat = 24
+    var size: CGFloat = 42
+    var cornerRadius: CGFloat = 12
 
     var body: some View {
         icon

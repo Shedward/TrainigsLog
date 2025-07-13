@@ -26,7 +26,9 @@ struct GlyphPicker: View {
             self.openEditor = true
         }
         .sheet(isPresented: $openEditor) {
-            EmptyView()
+            GlyphSelector(selected: selection ?? .default) { glyph in
+                selection = glyph
+            }
         }
     }
 }

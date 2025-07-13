@@ -10,27 +10,28 @@ import SwiftUI
 struct TrainingSessionCell: View {
     let trainingSession: TrainingSession
 
+    var glyph: Glyph {
+        trainingSession.kind?.glyph ?? .default
+    }
+
     var body: some View {
         VStack(alignment: .leading) {
-            HStack(alignment: .top) {
+            HStack(alignment: .bottom) {
+                GlyphImage(glyph: glyph)
                 VStack(alignment: .leading) {
                     Text(trainingSession.date.formatted(date: .abbreviated, time: .omitted))
                         .font(.caption.smallCaps())
                     Text(trainingSession.kind?.name ?? String(localized: "-"))
-                        .font(.headline)
-                        .background(alignment: .leadingLastTextBaseline) {
-                            Ellipse()
-                                .frame(height: 6)
-                                .offset(y: 3)
-                                .foregroundStyle(trainingSession.kind?.tint?.color.opacity(0.5) ?? .clear)
-                        }
+                        .font(.title2.bold())
+                        .foregroundStyle(glyph.tint.color)
                 }
                 Spacer()
                 VStack(alignment: .trailing) {
                     Text(trainingSession.difficulty.displayValue)
                         .font(.caption.smallCaps())
                     Text(trainingSession.totalLoad.value.formatted())
-                        .font(.title2.monospaced())
+                        .font(.title2.bold())
+                        .foregroundStyle(glyph.tint.color)
                 }
             }
             .padding(.horizontal)
@@ -82,7 +83,7 @@ struct TrainingSessionCell: View {
 
     let trainingSession = TrainingSession(
         date: Date(),
-        kind: TrainingKind(name: "Пречи / Руки", tint: .red),
+        kind: TrainingKind(name: "Пречи / Руки", glyph: .default),
         trainings: [
             Training(exercise: ex1, load: .weights(.init(weight: 2, reps: 20))),
             Training(exercise: ex1, load: .weights(.init(weight: 6, reps: 12))),
