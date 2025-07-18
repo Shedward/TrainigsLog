@@ -1,4 +1,6 @@
 
+import Foundation
+
 public protocol Dataable {
     associatedtype Data
 
@@ -10,4 +12,10 @@ public protocol Dataable {
 public macro Dataable() = #externalMacro(
     module: "TrainingsLogMacroMacros",
     type: "DataableMacro"
+)
+
+@attached(extension, conformances: AdditiveArithmetic, names: arbitrary)
+public macro AdditiveArithmetic() = #externalMacro(
+    module: "TrainingsLogMacroMacros",
+    type: "AdditiveArithmeticMacros"
 )

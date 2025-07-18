@@ -49,7 +49,7 @@ struct TrainingLoadPicker: View {
 extension TrainingLoadPicker {
 
     struct RawFields: View {
-        @Binding var raw: TrainingLoad.Raw?
+        @Binding var raw: RawLoad?
 
         init(_ load: Binding<TrainingLoad>) {
             self._raw = load.transform {
@@ -69,7 +69,7 @@ extension TrainingLoadPicker {
     }
 
     struct WeightFields: View {
-        @Binding var weight: TrainingLoad.Weights?
+        @Binding var weight: Weights?
         
         init(_ load: Binding<TrainingLoad>) {
             self._weight = load.transform {
@@ -90,7 +90,7 @@ extension TrainingLoadPicker {
     }
 
     struct AddingWeightFields: View {
-        @Binding var addingWeight: TrainingLoad.AddingWeights?
+        @Binding var addingWeight: AddingWeights?
 
         init(_ load: Binding<TrainingLoad>) {
             self._addingWeight = load.transform {
@@ -112,7 +112,7 @@ extension TrainingLoadPicker {
     }
 
     struct NegativeWeightFields: View {
-        @Binding var negativeWeight: TrainingLoad.NegativeWeights?
+        @Binding var negativeWeight: NegativeWeights?
 
         init(_ load: Binding<TrainingLoad>) {
             self._negativeWeight = load.transform {
@@ -134,7 +134,7 @@ extension TrainingLoadPicker {
     }
 
     struct DistanceFields: View {
-        @Binding var distance: TrainingLoad.Distance?
+        @Binding var distance: Distance?
         
         init(_ load: Binding<TrainingLoad>) {
             self._distance = load.transform {
@@ -155,7 +155,7 @@ extension TrainingLoadPicker {
     }
 
     struct RepetitionsFields: View {
-        @Binding var repetitions: TrainingLoad.Repetitions?
+        @Binding var repetitions: Repetitions?
         
         init(_ load: Binding<TrainingLoad>) {
             self._repetitions = load.transform {

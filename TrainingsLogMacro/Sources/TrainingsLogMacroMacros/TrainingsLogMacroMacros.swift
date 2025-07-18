@@ -7,6 +7,7 @@ import SwiftSyntaxMacros
 @main
 struct TrainingsLogMacroPlugin: CompilerPlugin {
     let providingMacros: [any Macro.Type] = [
-        DataableMacro.self
+        DataableMacro.self,
+        AdditiveArithmeticMacros.self
     ]
 }
