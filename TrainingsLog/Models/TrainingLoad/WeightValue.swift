@@ -10,7 +10,7 @@ import Foundation
 
 
 @AdditiveArithmetic
-struct WeightValue: Codable, Equatable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+struct WeightValue: Codable, Hashable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
     var value: Double
 
     init(value: Double) {

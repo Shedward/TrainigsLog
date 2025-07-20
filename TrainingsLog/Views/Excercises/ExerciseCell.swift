@@ -14,7 +14,6 @@ struct ExerciseCell: View {
     @Environment(ErrorHandler.self) var errorHandler
 
     @State private var musclesDescription: String?
-    @State private var loadStats: ExerciseLoadStats?
 
     init(exercise: Exercise) {
         self.exercise = exercise
@@ -32,26 +31,12 @@ struct ExerciseCell: View {
                         .lineLimit(1)
                 }
             }
-            Spacer()
-            if let loadStats {
-                VStack(alignment: .trailing) {
-                    Text(loadStats.workingLoad.formatted(.full))
-                        .font(.body.monospacedDigit().bold())
-                    Text(loadStats.lastLoad.formatted(.full))
-                        .font(.body.monospacedDigit())
-                }
-            }
         }
         .frame(minHeight: 32)
         .padding(.horizontal, 16)
         .padding(.vertical, 4)
-        .onAppear {
+        .onChange(of: exercise, initial: true) { _, _ in
             updateMusclesDescription()
-            updateExerciseLoadStats()
-        }
-        .onChange(of: exercise) { _, _ in
-            updateMusclesDescription()
-            updateExerciseLoadStats()
         }
     }
 
@@ -60,13 +45,5 @@ struct ExerciseCell: View {
             .sorted(using: SortDescriptor(\.loadFraction, order: .forward))
             .compactMap(\.muscle?.name)
             .joined(separator: ", ")
-    }
-
-    private func updateExerciseLoadStats() {
-        errorHandler.try {
-            let stats = try ExerciseLoadStatsService(modelContext: modelContext)
-                .workingLoadStats(for: exercise)
-            loadStats = stats
-        }
     }
 }

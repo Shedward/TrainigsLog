@@ -9,7 +9,7 @@ import TrainingsLogMacro
 import Foundation
 
 @AdditiveArithmetic
-struct DistanceValue: Codable, Equatable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+struct DistanceValue: Codable, Hashable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
     var value: Double
 
     init(value: Double) {

@@ -74,46 +74,6 @@ struct TrainingSessionCell: View {
 }
 
 #Preview {
-    let ex1 = Exercise(name: "Махи гантелей")
-    let ex2 = Exercise(name: "Тяга в/блока на плечи")
-    let ex3 = Exercise(name: "Батерфляй")
-    let ex4 = Exercise(name: "Канат на трицепс")
-    let ex5 = Exercise(name: "Сгибание на бицепс")
-    let ex6 = Exercise(name: "Поднятие ног со скруч.")
-
-    let trainingSession = TrainingSession(
-        date: Date(),
-        kind: TrainingKind(name: "Пречи / Руки", glyph: .default),
-        trainings: [
-            Training(exercise: ex1, load: .weights(.init(weight: 2, reps: 20))),
-            Training(exercise: ex1, load: .weights(.init(weight: 6, reps: 12))),
-            Training(exercise: ex1, load: .weights(.init(weight: 6, reps: 12))),
-            Training(exercise: ex1, load: .weights(.init(weight: 6, reps: 12))),
-
-            Training(exercise: ex2, load: .weights(.init(weight: 45, reps: 12))),
-            Training(exercise: ex2, load: .weights(.init(weight: 50, reps: 12))),
-            Training(exercise: ex2, load: .weights(.init(weight: 50, reps: 12))),
-            Training(exercise: ex2, load: .weights(.init(weight: 50, reps: 12))),
-
-            Training(exercise: ex3, load: .weights(.init(weight: 27, reps: 12))),
-            Training(exercise: ex3, load: .weights(.init(weight: 32, reps: 12))),
-            Training(exercise: ex3, load: .weights(.init(weight: 32, reps: 12))),
-            Training(exercise: ex3, load: .weights(.init(weight: 32, reps: 12))),
-
-            Training(exercise: ex4, load: .weights(.init(weight: 27, reps: 12))),
-            Training(exercise: ex4, load: .weights(.init(weight: 27, reps: 12))),
-            Training(exercise: ex4, load: .weights(.init(weight: 27, reps: 12))),
-
-            Training(exercise: ex5, load: .weights(.init(weight: 14, reps: 12))),
-            Training(exercise: ex5, load: .weights(.init(weight: 18, reps: 12))),
-            Training(exercise: ex5, load: .weights(.init(weight: 18, reps: 10))),
-
-            Training(exercise: ex6, load: .repetitions(.init(count: 12, loadPerRep: 22))),
-            Training(exercise: ex6, load: .repetitions(.init(count: 18, loadPerRep: 22))),
-            Training(exercise: ex6, load: .repetitions(.init(count: 18, loadPerRep: 22))),
-        ],
-        difficulty: .normal,
-    )
-    TrainingSessionCell(trainingSession: trainingSession)
+    TrainingSessionCell(trainingSession: .mock1)
         .padding()
 }

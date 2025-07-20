@@ -8,7 +8,7 @@
 import TrainingsLogMacro
 import Foundation
 
-protocol TrainingLoadRepresentable: Codable, Equatable {
+protocol TrainingLoadRepresentable: Codable, Hashable {
     var totalLoad: Double { get }
     var workingLoad: Double { get }
 

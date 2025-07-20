@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct BottomSheet<Content: View>: View {
-    let title: LocalizedStringKey
+    let title: Text
     var content: Content
 
     @Environment(\.dismiss) private var dismiss
 
-    init(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) {
-        self.title = title
+    init(_ key: LocalizedStringKey, @ViewBuilder content: () -> Content) {
+        self.title = Text(key)
+        self.content = content()
+    }
+
+    @_disfavoredOverload
+    init<S: StringProtocol>(_ title: S, @ViewBuilder content: () -> Content) {
+        self.title = Text(title)
         self.content = content()
     }
 

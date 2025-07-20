@@ -29,6 +29,10 @@ extension Button {
         Button("Delete", systemImage: "trash", role: .destructive, action: action)
     }
 
+    static func info(_ action: @escaping () -> Void) -> Self where Label == SwiftUI.Label<Text, Image> {
+        Button("Info", systemImage: "info", action: action)
+    }
+
     static func delete(_ title: String, action: @escaping () -> Void) -> Self where Label == SwiftUI.Label<Text, Image> {
         Button("Delete \(title)", systemImage: "trash", role: .destructive, action: action)
     }

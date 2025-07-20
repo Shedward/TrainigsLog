@@ -10,4 +10,7 @@ import Foundation
 struct ExerciseLoadStats {
     let lastLoad: TrainingLoad
     let workingLoad: TrainingLoad
+
+    let increment: TrainingLoadIncrement?
+    let lastSession: [TrainingLoad]
 }

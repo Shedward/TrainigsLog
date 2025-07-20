@@ -13,14 +13,16 @@ import Foundation
 
 enum TrainingLoad: TrainingLoadRepresentable {
 
-    static let zero = TrainingLoad.raw(.zero)
-
     case raw(RawLoad)
     case weights(Weights)
     case addingWeights(AddingWeights)
     case negativeWeights(NegativeWeights)
     case distance(Distance)
     case repetitions(Repetitions)
+
+    var isZero: Bool {
+        totalLoad == 0
+    }
 
     var totalLoad: Double {
         switch self {
@@ -130,6 +132,48 @@ enum TrainingLoad: TrainingLoadRepresentable {
             case .repetitions:
                 TrainingLoad.repetitions(.zero)
             }
+        }
+    }
+}
+
+extension TrainingLoad {
+    static let zero = TrainingLoad.raw(.zero)
+
+    static func + (lhs: TrainingLoad, rhs: TrainingLoad) -> TrainingLoad? {
+        switch (lhs, rhs) {
+        case let (.raw(lhs), .raw(rhs)):
+            .raw(lhs + rhs)
+        case let (.addingWeights(lhs), .addingWeights(rhs)):
+            .addingWeights(lhs + rhs)
+        case let (.weights(lhs), .weights(rhs)):
+            .weights(lhs + rhs)
+        case let (.negativeWeights(lhs), .negativeWeights(rhs)):
+            .negativeWeights(lhs + rhs)
+        case let (.distance(lhs), .distance(rhs)):
+            .distance(lhs + rhs)
+        case let (.repetitions(lhs), .repetitions(rhs)):
+            .repetitions(lhs + rhs)
+        default:
+            .none
+        }
+    }
+
+    static func - (lhs: TrainingLoad, rhs: TrainingLoad) -> TrainingLoad? {
+        switch (lhs, rhs) {
+        case let (.raw(lhs), .raw(rhs)):
+            .raw(lhs - rhs)
+        case let (.addingWeights(lhs), .addingWeights(rhs)):
+            .addingWeights(lhs - rhs)
+        case let (.weights(lhs), .weights(rhs)):
+            .weights(lhs - rhs)
+        case let (.negativeWeights(lhs), .negativeWeights(rhs)):
+            .negativeWeights(lhs - rhs)
+        case let (.distance(lhs), .distance(rhs)):
+            .distance(lhs - rhs)
+        case let (.repetitions(lhs), .repetitions(rhs)):
+            .repetitions(lhs - rhs)
+        default:
+            .none
         }
     }
 }

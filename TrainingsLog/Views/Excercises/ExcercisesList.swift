@@ -14,6 +14,8 @@ struct ExercisesList: View {
     var exercises: [Exercise] = []
 
     @State var openEditExerciseSheet: Exercise?
+    @State var openExerciseDetailsSheet: Exercise?
+
     @Environment(\.modelContext) var modelContext
     @Environment(ErrorHandler.self) private var errorHandler
 
@@ -34,7 +36,13 @@ struct ExercisesList: View {
                         }
                     }
                 }
-                
+                .swipeActions(edge: .leading) {
+                    Button.info {
+                        openExerciseDetailsSheet = exercise
+                    }
+                    .tint(.accentColor)
+                }
+
             }.toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button.add {
@@ -48,6 +56,9 @@ struct ExercisesList: View {
         }
         .sheet(item: $openEditExerciseSheet) { exercise in
             EditExercise(exercise: exercise)
+        }
+        .sheet(item: $openExerciseDetailsSheet) { exercise in
+            ExerciseDetails(exercise: exercise)
         }
     }
 }
