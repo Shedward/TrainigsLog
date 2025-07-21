@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TrainingLoadSelector: View {
 
+    let exerciseLoadStats: ExerciseLoadStats?
     let onSelect: (TrainingLoad) -> Void
     let onDelete: (() -> Void)?
 
@@ -18,10 +19,12 @@ struct TrainingLoadSelector: View {
 
     init(
         selected: TrainingLoad = .zero,
+        exerciseLoadStats: ExerciseLoadStats?,
         onSelect: @escaping (TrainingLoad) -> Void,
         onDelete: (() -> Void)? = nil
     ) {
         self._trainingLoad = .init(initialValue: selected)
+        self.exerciseLoadStats = exerciseLoadStats
         self.onSelect = onSelect
         self.onDelete = onDelete
     }
@@ -43,6 +46,21 @@ struct TrainingLoadSelector: View {
                     Button.save {
                         onSelect(trainingLoad)
                         dismiss()
+                    }
+                }
+                if let increment = exerciseLoadStats?.increment, !increment.isZero {
+                    ToolbarItemGroup(placement: .bottomBar) {
+                        Button {
+                            trainingLoad += increment
+                        } label: {
+                            Label(increment.formatted(.increased), systemImage: "arrow.up")
+                        }
+                        Text(increment.formatted(.value))
+                        Button {
+                            trainingLoad -= increment
+                        } label: {
+                            Label(increment.formatted(.decreased), systemImage: "arrow.down")
+                        }
                     }
                 }
             }

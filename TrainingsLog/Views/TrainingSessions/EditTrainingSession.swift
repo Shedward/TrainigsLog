@@ -13,6 +13,7 @@ struct EditTrainingSession: View {
     private let trainingSessionModel: TrainingSession
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(ErrorHandler.self) private var errorHandler
     @Environment(\.dismiss) private var dismiss
 
     @State private var trainingSessionData: TrainingSession.Data
@@ -70,11 +71,14 @@ struct EditTrainingSession: View {
         }
         .sheet(isPresented: $openExerciseSelector) {
             ExerciseSelector { addExercise in
-                trainingSessionData.exercises.appendNewBlock(exercise: addExercise)
+                errorHandler.try {
+                    let stats = try modelContext.exerciseLoadStats(for: addExercise)
+                    trainingSessionData.exercises.appendNewBlock(exercise: addExercise, exerciseStats: stats)
+                }
             }
         }
         .sheet(item: $openTrainingLoadEditor) { set in
-            TrainingLoadSelector(selected: set.load) { newLoad in
+            TrainingLoadSelector(selected: set.load, exerciseLoadStats: set.block?.exerciseStats) { newLoad in
                 set.load = newLoad
             } onDelete: {
                 trainingSessionData.exercises.delete(set: set)

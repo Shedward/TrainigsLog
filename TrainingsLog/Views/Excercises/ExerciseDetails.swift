@@ -21,11 +21,12 @@ struct ExerciseDetails: View {
                 if let loadStats {
                     LabeledContent("Last load", value: loadStats.lastLoad.formatted(.full))
                     LabeledContent("Working load", value: loadStats.workingLoad.formatted(.full))
-                    LabeledContent("Increment", value: (loadStats.increment?.increment ?? .zero).formatted(.full))
-
-                    HStack {
-                        ForEach(loadStats.lastSession, id: \.self) { load in
-                            Text(load.formatted(.workingLoad))
+                    LabeledContent("Increment", value: (loadStats.increment?.increment ?? .zero).formatted(.workingLoad))
+                    LabeledContent("Last session") {
+                        HStack {
+                            ForEach(loadStats.lastSession, id: \.self) { load in
+                                Text(load.formatted(.workingLoad))
+                            }
                         }
                     }
                 }
@@ -38,8 +39,7 @@ struct ExerciseDetails: View {
 
     private func fetchStats() {
         errorHandler.try {
-            let statsService = ExerciseLoadStatsService(modelContext: modelContext)
-            self.loadStats = try statsService.workingLoadStats(for: exercise)
+            self.loadStats = try modelContext.exerciseLoadStats(for: exercise)
         }
     }
 }

@@ -176,6 +176,24 @@ extension TrainingLoad {
             .none
         }
     }
+
+    static func += (lhs: inout TrainingLoad, rhs: TrainingLoadIncrement) {
+        if
+            let increment = rhs.increment,
+            let result = lhs + increment
+        {
+            lhs = result
+        }
+    }
+
+    static func -= (lhs: inout TrainingLoad, rhs: TrainingLoadIncrement) {
+        if
+            let increment = rhs.increment,
+            let result = lhs - increment
+        {
+            lhs = result
+        }
+    }
 }
 
 extension TrainingLoad: Defaultable {

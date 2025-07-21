@@ -16,20 +16,24 @@ final class TrainingSessionExercises {
     final class ExerciseBlock: Identifiable {
         let id: PersistentIdentifier
         var sets: [ExerciseSet]
+        var exerciseStats: ExerciseLoadStats?
 
         var exercise: Exercise? {
             sets.first?.training.exercise
         }
 
-        init(firstTraining: Training) {
+        init(firstTraining: Training, exerciseStats: ExerciseLoadStats?) {
             self.id = firstTraining.id
-            self.sets = [.init(training: firstTraining)]
+            self.sets = []
+            self.exerciseStats = exerciseStats
+
+            self.sets = [.init(training: firstTraining, block: self)]
         }
 
         func repeatSet() {
             let lastLoad = sets.last?.load ?? .zero
             let training = Training(exercise: exercise, load: lastLoad)
-            sets.append(.init(training: training))
+            sets.append(.init(training: training, block: self))
         }
 
         func delete(training: Training) {
@@ -47,11 +51,13 @@ final class TrainingSessionExercises {
         let training: Training
 
         var load: TrainingLoad
+        weak var block: ExerciseBlock?
 
-        init(training: Training) {
+        init(training: Training, block: ExerciseBlock?) {
             self.id = training.id
             self.training = training
             self.load = training.load
+            self.block = block
         }
     }
 
@@ -73,13 +79,13 @@ final class TrainingSessionExercises {
         for training in trainings {
             if let block = currentBlock {
                 if block.exercise == training.exercise {
-                    block.sets.append(.init(training: training))
+                    block.sets.append(.init(training: training, block: block))
                 } else {
                     blocks.append(block)
-                    currentBlock = .init(firstTraining: training)
+                    currentBlock = .init(firstTraining: training, exerciseStats: nil)
                 }
             } else {
-                currentBlock = .init(firstTraining: training)
+                currentBlock = .init(firstTraining: training, exerciseStats: nil)
             }
         }
 
@@ -90,9 +96,9 @@ final class TrainingSessionExercises {
         self.blocks = blocks
     }
 
-    func appendNewBlock(exercise: Exercise) {
-        let training = Training(exercise: exercise)
-        blocks.append(.init(firstTraining: training))
+    func appendNewBlock(exercise: Exercise, exerciseStats: ExerciseLoadStats?) {
+        let training = Training(exercise: exercise, load: exerciseStats?.lastSession.first ?? .zero)
+        blocks.append(.init(firstTraining: training, exerciseStats: exerciseStats))
     }
 
     func delete(block: ExerciseBlock) {
