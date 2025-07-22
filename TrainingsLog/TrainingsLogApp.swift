@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+import OSLog
 
 @main
 struct TrainingsLogApp: App {
@@ -24,6 +25,7 @@ struct TrainingsLogApp: App {
         ])
 
         let url = URL.documentsDirectory.appending(path: "TrainingsLog.sqlite")
+        Logger().info("Load database from \(url)")
         let modelConfiguration = ModelConfiguration(schema: schema, url: url)
 
         do {
