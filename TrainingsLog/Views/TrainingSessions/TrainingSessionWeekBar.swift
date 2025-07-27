@@ -70,31 +70,22 @@ extension TrainingSessionWeekBar {
         let insets: CGFloat
 
         func path(in rect: CGRect) -> Path {
-            let innerRect = rect
-                .inset(by: UIEdgeInsets(top: insets, left: insets, bottom: insets, right: insets))
+            let innerRect = rect.insetBy(dx: insets, dy: insets)
             let cornerRadius = innerRect.width / 2
+            let relHeight = maxValue > 0 ? value / maxValue : 1.0
 
-            let height: CGFloat
+            var height = innerRect.height * relHeight
 
-            if maxValue <= 0 {
-                height = innerRect.height
-            } else {
-                let relHeight = value / maxValue
-
-                var limitingHeight = innerRect.height
-                if outerInsets > 0 {
-                    let innerHeight = rect.height - 2.0 * (insets - outerInsets)
-                    limitingHeight = innerHeight * relHeight - 2.0 * outerInsets
-                }
-
-                height = min(innerRect.height * relHeight, limitingHeight)
+            if outerInsets > 0 {
+                let adjustedHeight = (rect.height - 2 * (insets - outerInsets)) * relHeight - 2 * outerInsets
+                height = min(height, adjustedHeight)
             }
 
             let width = min(innerRect.width, height)
 
             return Path(
                 roundedRect: CGRect(
-                    x: rect.minX + 0.5 * rect.width - 0.5 * width,
+                    x: rect.midX - width / 2,
                     y: innerRect.maxY - height,
                     width: width,
                     height: height
@@ -137,19 +128,19 @@ extension TrainingSessionWeekBar {
                 date: Date().addingTimeInterval(4 * 60 * 60 * 24),
                 kinds: [],
                 previousLoad: 9,
-                currentLoad: 8
+                currentLoad: nil
             ),
             .init(
                 date: Date().addingTimeInterval(5 * 60 * 60 * 24),
                 kinds: [],
                 previousLoad: 6,
-                currentLoad: 6
+                currentLoad: nil
             ),
             .init(
                 date: Date().addingTimeInterval(6 * 60 * 60 * 24),
                 kinds: [],
-                previousLoad: 4,
-                currentLoad: 4
+                previousLoad: 1,
+                currentLoad: 1
             ),
         ]
     )
