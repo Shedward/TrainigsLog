@@ -19,7 +19,7 @@ struct TrainingSessionWeekSummary {
     }
 
     struct DaySummary {
-        let date: Date
+        let interval: DateInterval
         let kinds: [TrainingKind]
         let previousLoad: WeightValue?
         let currentLoad: WeightValue?

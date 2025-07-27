@@ -72,7 +72,8 @@ struct EditTrainingSession: View {
         .sheet(isPresented: $openExerciseSelector) {
             ExerciseSelector { addExercise in
                 errorHandler.try {
-                    let stats = try modelContext.exerciseLoadStats(for: addExercise)
+                    let stats = try modelContext.exerciseLoadStatsService
+                        .workingLoadStats(for: addExercise)
                     trainingSessionData.exercises.appendNewBlock(exercise: addExercise, exerciseStats: stats)
                 }
             }

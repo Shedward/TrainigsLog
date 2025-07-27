@@ -22,4 +22,23 @@ extension Sequence {
 
         return maxElement
     }
+
+    func split(by toFirst: (Element) -> Bool) -> ([Element], [Element]) {
+        var before: [Element] = []
+        var after: [Element] = []
+        
+        for element in self {
+            if toFirst(element) {
+                before.append(element)
+            } else {
+                after.append(element)
+            }
+        }
+
+        return (before, after)
+    }
+
+    func uniqueArray() -> Array<Element> where Element: Hashable {
+        Array(Set(self))
+    }
 }

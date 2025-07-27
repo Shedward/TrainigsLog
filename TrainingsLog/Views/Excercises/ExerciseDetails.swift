@@ -39,7 +39,8 @@ struct ExerciseDetails: View {
 
     private func fetchStats() {
         errorHandler.try {
-            self.loadStats = try modelContext.exerciseLoadStats(for: exercise)
+            self.loadStats = try modelContext.exerciseLoadStatsService
+                .workingLoadStats(for: exercise)
         }
     }
 }

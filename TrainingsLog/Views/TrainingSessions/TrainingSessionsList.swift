@@ -17,22 +17,34 @@ struct TrainingSessionsList: View {
     @Environment(ErrorHandler.self) private var errorHandler
 
     @State private var openEditSessionSheet: TrainingSession?
+    @State private var openWeeklyCalendar: Bool = false
+    @State private var weekSummary: TrainingSessionWeekSummary?
 
     var body: some View {
         NavigationStack {
-            List(trainingSessions) { session in
-                Cell {
-                    TrainingSessionCell(trainingSession: session)
-                } onTap: {
-                    openEditSessionSheet = session
+            List {
+                if let weekSummary {
+                    Cell {
+                        TrainingSessionWeekBar(summary: weekSummary)
+                    } onTap: {
+                        openWeeklyCalendar = true
+                    }
+                    .listRowSeparator(.hidden)
                 }
-                .listRowSeparator(.hidden)
-                .listRowInsetsMultiplatform(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                .swipeActions {
-                    Button.delete {
-                        withAnimation {
-                            errorHandler.try {
-                                try session.delete()
+                ForEach(trainingSessions) { session in
+                    Cell {
+                        TrainingSessionCell(trainingSession: session)
+                    } onTap: {
+                        openEditSessionSheet = session
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowInsetsMultiplatform(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    .swipeActions {
+                        Button.delete {
+                            withAnimation {
+                                errorHandler.try {
+                                    try session.delete()
+                                }
                             }
                         }
                     }
@@ -46,10 +58,21 @@ struct TrainingSessionsList: View {
                     }
                 }
             }
-            .navigationTitle("Training Sessions")
         }
         .sheet(item: $openEditSessionSheet) { session in
             EditTrainingSession(trainingSession: session)
+        }
+        .sheet(isPresented: $openWeeklyCalendar) {
+            TrainingWeeklyCalendar()
+        }
+        .onChange(of: trainingSessions, initial: true) { _, _ in
+            fetchWeekSummary()
+        }
+    }
+
+    private func fetchWeekSummary() {
+        errorHandler.try {
+            weekSummary = try modelContext.trainingCalendar.weekSummary()
         }
     }
 }

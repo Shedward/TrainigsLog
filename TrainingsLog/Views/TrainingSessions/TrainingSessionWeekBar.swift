@@ -14,7 +14,7 @@ struct TrainingSessionWeekBar: View {
     var body: some View {
         HStack(spacing: 16) {
             Spacer(minLength: 8)
-            ForEach(summary.days, id: \.date) { day in
+            ForEach(summary.days, id: \.interval) { day in
                 Item(day: day, maxLoad: summary.maxLoad ?? .zero)
             }
             Spacer(minLength: 16)
@@ -35,7 +35,7 @@ extension TrainingSessionWeekBar {
 
                     let currentOutside = day.currentLoad?.value ?? 0 >= day.previousLoad?.value ?? 0
 
-                    var gradient = LinearGradient(
+                    let gradient = LinearGradient(
                         stops: day.kinds.enumerated().map { index, kind in
                             Gradient.Stop(
                                 color: kind.glyph?.tint.color ?? .accentColor,
@@ -68,9 +68,18 @@ extension TrainingSessionWeekBar {
                     }
                 }
                 .aspectRatio(0.618, contentMode: .fit)
-                Text(day.date.formatted(.dateTime.day()))
-                    .font(.caption.monospaced())
+                dayTitle
             }
+        }
+
+        @ViewBuilder
+        var dayTitle: some View {
+            let isFuture = day.interval.start > Date()
+            let isToday = day.interval.contains(Date())
+
+            Text(day.interval.start.formatted(.dateTime.day()))
+                .font(isToday ? .caption.bold().monospaced() : .caption.monospaced())
+                .foregroundStyle(isFuture ? .secondary : .primary)
         }
     }
 
@@ -113,7 +122,7 @@ extension TrainingSessionWeekBar {
     let summary = TrainingSessionWeekSummary(
         days: [
             .init(
-                date: Date(),
+                interval: DateInterval(),
                 kinds: [
                     TrainingKind(name: "Something", glyph: .init(tint: .red)),
                     TrainingKind(name: "Another", glyph: .init(tint: .green)),
@@ -124,19 +133,19 @@ extension TrainingSessionWeekBar {
                 currentLoad: 16
             ),
             .init(
-                date: Date().addingTimeInterval(1 * 60 * 60 * 24),
+                interval: DateInterval().addingTimeInterval(1 * 60 * 60 * 24),
                 kinds: [TrainingKind(name: "Something", glyph: .init(tint: .orange))],
                 previousLoad: 14,
                 currentLoad: 14
             ),
             .init(
-                date: Date().addingTimeInterval(2 * 60 * 60 * 24),
+                interval: DateInterval().addingTimeInterval(2 * 60 * 60 * 24),
                 kinds: [],
                 previousLoad: 12,
                 currentLoad: 12
             ),
             .init(
-                date: Date().addingTimeInterval(3 * 60 * 60 * 24),
+                interval: DateInterval().addingTimeInterval(3 * 60 * 60 * 24),
                 kinds: [
                     TrainingKind(name: "Something", glyph: .init(tint: .orange)),
                     TrainingKind(name: "Another", glyph: .init(tint: .blue)),
@@ -145,13 +154,13 @@ extension TrainingSessionWeekBar {
                 currentLoad: 10
             ),
             .init(
-                date: Date().addingTimeInterval(4 * 60 * 60 * 24),
+                interval: DateInterval().addingTimeInterval(4 * 60 * 60 * 24),
                 kinds: [],
                 previousLoad: 9,
                 currentLoad: nil
             ),
             .init(
-                date: Date().addingTimeInterval(5 * 60 * 60 * 24),
+                interval: DateInterval().addingTimeInterval(5 * 60 * 60 * 24),
                 kinds: [
                     TrainingKind(name: "Another", glyph: .init(tint: .blue)),
                 ],
@@ -159,7 +168,7 @@ extension TrainingSessionWeekBar {
                 currentLoad: nil
             ),
             .init(
-                date: Date().addingTimeInterval(6 * 60 * 60 * 24),
+                interval: DateInterval().addingTimeInterval(6 * 60 * 60 * 24),
                 kinds: [],
                 previousLoad: 1,
                 currentLoad: 1

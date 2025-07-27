@@ -58,7 +58,7 @@ final class ExerciseLoadStatsService {
 }
 
 extension ModelContext {
-    func exerciseLoadStats(for exercise: Exercise) throws -> ExerciseLoadStats {
-        try ExerciseLoadStatsService(modelContext: self).workingLoadStats(for: exercise)
+    var exerciseLoadStatsService: ExerciseLoadStatsService {
+        ExerciseLoadStatsService(modelContext: self)
     }
 }
