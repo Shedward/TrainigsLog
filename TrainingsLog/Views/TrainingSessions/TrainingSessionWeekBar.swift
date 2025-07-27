@@ -78,7 +78,7 @@ extension TrainingSessionWeekBar {
 
             if outerInsets > 0 {
                 let adjustedHeight = (rect.height - 2 * (insets - outerInsets)) * relHeight - 2 * outerInsets
-                height = min(height, adjustedHeight)
+                height = min(height, max(adjustedHeight, 0))
             }
 
             let width = min(innerRect.width, height)
