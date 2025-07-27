@@ -34,7 +34,19 @@ extension TrainingSessionWeekBar {
                         .foregroundStyle(Color.gray.quinary)
 
                     let currentOutside = day.currentLoad?.value ?? 0 >= day.previousLoad?.value ?? 0
-                    let color = day.kinds.first?.glyph?.tint.color ?? .accentColor
+
+                    var gradient = LinearGradient(
+                        stops: day.kinds.enumerated().map { index, kind in
+                            Gradient.Stop(
+                                color: kind.glyph?.tint.color ?? .accentColor,
+                                location: Double(index) / Double(max(day.kinds.count - 1, 1))
+                            )
+                        },
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+
+                    let whiteGradient = LinearGradient(colors: [.white], startPoint: .leading, endPoint: .trailing)
 
                     if let current = day.currentLoad {
                         Bar(
@@ -43,7 +55,7 @@ extension TrainingSessionWeekBar {
                             outerInsets: currentOutside ? 0 : 4,
                             insets: currentOutside ? 4 : 8,
                         )
-                        .foregroundStyle(color)
+                        .foregroundStyle(gradient)
                     }
                     if let previousLoad = day.previousLoad {
                         Bar(
@@ -52,7 +64,7 @@ extension TrainingSessionWeekBar {
                             outerInsets: currentOutside ? 4 : 0,
                             insets: currentOutside ? 8 : 4
                         )
-                        .foregroundStyle(currentOutside ? Color.white.opacity(0.33) : color.opacity(0.25))
+                        .foregroundStyle(currentOutside ? whiteGradient.opacity(0.33) : gradient.opacity(0.25))
                     }
                 }
                 .aspectRatio(0.618, contentMode: .fit)
@@ -102,7 +114,12 @@ extension TrainingSessionWeekBar {
         days: [
             .init(
                 date: Date(),
-                kinds: [],
+                kinds: [
+                    TrainingKind(name: "Something", glyph: .init(tint: .red)),
+                    TrainingKind(name: "Another", glyph: .init(tint: .green)),
+                    TrainingKind(name: "Something", glyph: .init(tint: .indigo)),
+                    TrainingKind(name: "Another", glyph: .init(tint: .blue)),
+                ],
                 previousLoad: 16,
                 currentLoad: 16
             ),
@@ -120,7 +137,10 @@ extension TrainingSessionWeekBar {
             ),
             .init(
                 date: Date().addingTimeInterval(3 * 60 * 60 * 24),
-                kinds: [],
+                kinds: [
+                    TrainingKind(name: "Something", glyph: .init(tint: .orange)),
+                    TrainingKind(name: "Another", glyph: .init(tint: .blue)),
+                ],
                 previousLoad: 11,
                 currentLoad: 10
             ),
@@ -132,7 +152,9 @@ extension TrainingSessionWeekBar {
             ),
             .init(
                 date: Date().addingTimeInterval(5 * 60 * 60 * 24),
-                kinds: [],
+                kinds: [
+                    TrainingKind(name: "Another", glyph: .init(tint: .blue)),
+                ],
                 previousLoad: 6,
                 currentLoad: nil
             ),
