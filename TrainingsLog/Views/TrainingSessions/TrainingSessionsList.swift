@@ -16,12 +16,13 @@ struct TrainingSessionsList: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ErrorHandler.self) private var errorHandler
 
+    @State private var navigationPath = NavigationPath()
     @State private var openEditSessionSheet: TrainingSession?
     @State private var openWeeklyCalendar: Bool = false
     @State private var weekSummary: TrainingSessionWeekSummary?
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             List {
                 if let weekSummary {
                     Cell {
@@ -35,7 +36,7 @@ struct TrainingSessionsList: View {
                     Cell {
                         TrainingSessionCell(trainingSession: session)
                     } onTap: {
-                        openEditSessionSheet = session
+                        navigationPath.append(Screens.sessionDetails(session))
                     }
                     .listRowSeparator(.hidden)
                     .listRowInsetsMultiplatform(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
@@ -48,6 +49,11 @@ struct TrainingSessionsList: View {
                             }
                         }
                     }
+                    .swipeActions(edge: .leading) {
+                        Button.edit {
+                            openEditSessionSheet = session
+                        }
+                    }
                 }
             }
             .listStyle(.plain)
@@ -56,6 +62,12 @@ struct TrainingSessionsList: View {
                     Button.add {
                         openEditSessionSheet = TrainingSession()
                     }
+                }
+            }
+            .navigationDestination(for: Screens.self){ screen in
+                switch screen {
+                case .sessionDetails(let session):
+                    TrainingSessionDetails(trainingSession: session)
                 }
             }
         }
@@ -74,5 +86,11 @@ struct TrainingSessionsList: View {
         errorHandler.try {
             weekSummary = try modelContext.trainingCalendar.weekSummary()
         }
+    }
+}
+
+extension TrainingSessionsList {
+    enum Screens: Hashable {
+        case sessionDetails(TrainingSession)
     }
 }

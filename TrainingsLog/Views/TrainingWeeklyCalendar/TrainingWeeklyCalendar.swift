@@ -21,15 +21,13 @@ struct TrainingWeeklyCalendar: View {
             }
             .listStyle(.plain)
             .task {
-                Task(priority: .userInitiated) {
-                    let startDate = Date()
-                    let weeksCount = 12
+                let startDate = Date()
+                let weeksCount = 12
 
-                    for weekOffset in 0..<weeksCount {
-                        let date = startDate.addingTimeInterval(-Double(weekOffset) * 7 * 24 * 60 * 60)
-                        if let summary = try? modelContext.trainingCalendar.weekSummary(for: date) {
-                            summaries.append(summary)
-                        }
+                for weekOffset in 0..<weeksCount {
+                    let date = startDate.addingTimeInterval(-Double(weekOffset) * 7 * 24 * 60 * 60)
+                    if let summary = try? modelContext.trainingCalendar.weekSummary(for: date) {
+                        summaries.append(summary)
                     }
                 }
             }

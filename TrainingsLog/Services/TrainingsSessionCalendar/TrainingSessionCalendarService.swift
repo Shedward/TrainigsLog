@@ -83,6 +83,20 @@ final class TrainingSessionCalendarService {
 
         return TrainingSessionWeekSummary(days: daysSummary)
     }
+
+    func lastSessions(for kind: TrainingKind, maxCount: Int = 30) throws -> [TrainingSession] {
+        let id = kind.id
+        var descriptor = FetchDescriptor<TrainingSession>(
+            predicate: #Predicate {
+                $0.kind?.id == id
+            },
+            sortBy: [.init(\.date)]
+        )
+
+        descriptor.fetchLimit = maxCount
+
+        return try modelContext.fetch(descriptor)
+    }
 }
 
 extension ModelContext {
