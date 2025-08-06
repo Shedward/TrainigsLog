@@ -22,6 +22,10 @@ final class TrainingSessionExercises {
             sets.first?.training.exercise
         }
 
+        var totalLoad: Double {
+            sets.map(\.load.totalLoad).reduce(.zero, +)
+        }
+
         init(firstTraining: Training, exerciseStats: ExerciseLoadStats?) {
             self.id = firstTraining.id
             self.sets = []

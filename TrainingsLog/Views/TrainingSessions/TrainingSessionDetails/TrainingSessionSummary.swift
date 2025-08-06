@@ -11,7 +11,7 @@ struct TrainingSessionSummary: View {
     let trainingSession: TrainingSession
 
     var body: some View {
-        HStack {
+        HStack(spacing: 16) {
             InfoBox(
                 value: trainingSession.interval?.duration.formatted(.time(pattern: .hourMinute)),
                 title: String(localized: "Duration")
@@ -22,8 +22,9 @@ struct TrainingSessionSummary: View {
             )
             Spacer()
             InfoBox(
-                value: trainingSession.totalLoad.formatted(),
-                title: String(localized: "Load")
+                value: trainingSession.totalLoad.formatted(.init(valueOnly: true)),
+                title: String(localized: "Load"),
+                alignment: .trailing
             )
             .bold()
         }

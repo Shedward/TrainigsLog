@@ -17,6 +17,7 @@ struct TrainingSessionDetails: View {
     @State private var sessionsWithSameKind: [TrainingSession] = []
     @State private var selectedDate: Date?
     @State private var exercises: TrainingSessionExercises?
+    @State private var loadByMuscles: TrainingLoadByMuscle?
 
     var body: some View {
         List {
@@ -40,7 +41,12 @@ struct TrainingSessionDetails: View {
                 }
             }
 
-            Section("Muscles") {
+            if let loadByMuscle = loadByMuscles, !loadByMuscle.isEmpty {
+                Section("Muscles") {
+                    ForEach(loadByMuscle.loadByMuscle) { loadByMuscle in
+                        LoadByMuscleCell(loadByMuscle: loadByMuscle)
+                    }
+                }
             }
         }
         .listStyle(.plain)
@@ -54,6 +60,7 @@ struct TrainingSessionDetails: View {
                 guard let kind = trainingSession.kind else { return }
                 sessionsWithSameKind = try modelContext.trainingCalendar.lastSessions(for: kind)
                 exercises = TrainingSessionExercises(trainingSession: trainingSession)
+                loadByMuscles = TrainingLoadByMuscle(trainingSession: trainingSession)
             }
         }
     }

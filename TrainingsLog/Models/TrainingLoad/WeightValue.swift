@@ -31,7 +31,13 @@ struct WeightValue: Codable, Hashable, ExpressibleByFloatLiteral, ExpressibleByI
 }
 
 struct WeightValueFormatStyle: FormatStyle {
+    var valueOnly: Bool = false
+
     public func format(_ value: WeightValue) -> String {
-        String(localized: "\(value.value.formatted()) kg")
+        if valueOnly {
+            value.value.formatted(.number.rounded())
+        } else {
+            String(localized: "\(value.value.formatted(.number.rounded())) kg")
+        }
     }
 }

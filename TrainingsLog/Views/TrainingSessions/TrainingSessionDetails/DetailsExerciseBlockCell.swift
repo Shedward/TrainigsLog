@@ -11,15 +11,18 @@ struct TrainingSessionBlockCell: View {
     let exerciseBlock: TrainingSessionExercises.ExerciseBlock
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
+        VStack(alignment: .leading) {
+            HStack(alignment: .firstTextBaseline) {
                 Text(exerciseBlock.exercise?.name ?? String(localized: "-"))
                     .font(.headline)
-                if let sets = ListFormatter()
-                    .string(from: exerciseBlock.sets.map { $0.load.formatted(.full) }) {
-                    Text(sets)
-                        .font(.body)
-                }
+                Spacer()
+                Text(exerciseBlock.totalLoad.formatted())
+                    .font(.headline)
+            }
+            if let sets = ListFormatter()
+                .string(from: exerciseBlock.sets.map { $0.load.formatted(.full) }) {
+                Text(sets)
+                    .font(.body)
             }
         }
     }
