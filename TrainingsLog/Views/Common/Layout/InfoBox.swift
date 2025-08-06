@@ -18,7 +18,7 @@ struct InfoBox: View {
             Text(title)
                 .font(.caption.smallCaps())
         }
-        .padding()
+        .padding(.horizontal)
     }
 }
 

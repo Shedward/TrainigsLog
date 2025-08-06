@@ -72,7 +72,13 @@ final class TrainingSessionExercises {
         self.blocks = blocks
     }
 
-    init(grouping trainings: [Training]) {
+    convenience init(trainingSession: TrainingSession) {
+        self.init(
+            grouping: trainingSession.trainings.sorted(using: SortDescriptor(\.orderInSession, order: .forward))
+        )
+    }
+
+    private init(grouping trainings: [Training]) {
         var blocks: [ExerciseBlock] = []
         var currentBlock: ExerciseBlock?
 

@@ -12,8 +12,18 @@ extension TrainingSession {
         date: Date(),
         kind: TrainingKind(name: "Пречи / Руки", glyph: .default),
         trainings: [
-            Training(exercise: .mock1, load: .weights(.init(weight: 2, reps: 20))),
-            Training(exercise: .mock1, load: .weights(.init(weight: 6, reps: 12))),
+            Training(
+                startDate: Date(),
+                duration: 120,
+                exercise: .mock1,
+                load: .weights(.init(weight: 2, reps: 20))
+            ),
+            Training(
+                startDate: Date().addingTimeInterval(120),
+                duration: 600,
+                exercise: .mock1,
+                load: .weights(.init(weight: 6, reps: 12))
+            ),
             Training(exercise: .mock1, load: .weights(.init(weight: 6, reps: 12))),
             Training(exercise: .mock1, load: .weights(.init(weight: 6, reps: 12))),
 

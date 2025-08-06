@@ -21,6 +21,11 @@ final class Training {
     var difficulty: Difficulty
     var comment: String?
 
+    var interval: DateInterval? {
+        guard let startDate else { return nil }
+        return DateInterval(start: startDate, duration: duration)
+    }
+
     init(
         orderInSession: Int = 0,
         startDate: Date? = nil,

@@ -22,6 +22,17 @@ final class TrainingSession {
         return WeightValue(value: value)
     }
 
+    var interval: DateInterval? {
+        let startDate = trainings.compactMap(\.interval?.start).min()
+        let endDate = trainings.compactMap(\.interval?.end).max()
+
+        if let startDate, let endDate, startDate <= endDate {
+            return DateInterval(start: startDate, end: endDate)
+        } else {
+            return nil
+        }
+    }
+
     init(
         date: Date = Date(),
         kind: TrainingKind? = nil,
@@ -58,9 +69,7 @@ extension TrainingSession: Dataable {
         Data(
             date: date,
             kind: kind,
-            exercises: TrainingSessionExercises(
-                grouping: trainings.sorted(using: SortDescriptor(\.orderInSession, order: .forward))
-            ),
+            exercises: TrainingSessionExercises(trainingSession: self),
             difficulty: difficulty,
             comment: comment
         )
