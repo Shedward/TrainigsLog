@@ -19,7 +19,7 @@ enum Tint: CaseIterable, Codable {
 
     var color: Color {
         switch self {
-            case .none: .black
+            case .none: .primary
             case .red: .red
             case .orange: .orange
             case .yellow: .yellow
